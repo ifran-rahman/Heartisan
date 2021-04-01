@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_block %}
+<br><br>
+<div>
+<button type="button" onclick="location.href='{% url 'log' %}' ">Logout</button>
+</div>
+{% endblock %}
