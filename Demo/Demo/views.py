@@ -35,7 +35,18 @@ def postsignIn(request):
         return render(request,"Login.html",{"message":message})
     session_id=user['idToken']
     request.session['uid']=str(session_id)
-    return render(request,"Home.html",{"email":email})
+
+    elapsedtime = database.child("ECG1").child("Elapsed time").get().val()
+    abdomenlist = database.child("ECG1").child("Abdomen_1").get().val()
+    #elapsedti1=elapsedtime.val()
+    #abdomenli=abdomenlist.val()
+
+
+    return render(request,"Home.html",{"email":email,'elapsedtime':elapsedtime,'abdomenlist':abdomenlist})
+    #data=database.child("ECG1")
+
+    #values={'data':data}
+    #return render(request,"graph.html",values)
 
 def logout(request):
     try:
@@ -79,3 +90,17 @@ def postReset(request):
 	except:
 		message = "Something went wrong, Please check the email you provided is registered or not"
 		return render(request, "Reset.html", {"msg":message})
+
+
+def line_graph(request):
+    elapsedtime = database.child("ECG1").child("Elapsed time").get().val()
+    abdomenlist = database.child("ECG1").child("Abdomen_1").get().val()
+
+    # data = runner.objects.all()
+    values = {
+        'elapsedtime': elapsedtime,
+        'abdomenlist': abdomenlist,
+    }
+
+    return render(request, "graph.html", values)
+    # return render(request,"graph.html",{'elapsedtime':elapsedtime,'abdomenlist':abdomenlist})

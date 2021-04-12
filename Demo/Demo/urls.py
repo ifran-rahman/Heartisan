@@ -28,4 +28,5 @@ urlpatterns = [
     path('postsignUp/', views.postsignUp),
     path('reset/', views.reset,name="reset"),
     path('postReset/', views.postReset),
+    path('graph/',views.line_graph,name='graph'),
 ]

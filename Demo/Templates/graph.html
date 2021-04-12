@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_block %}
+
+
+
+<!--Chart JS CDN-->
+
+
+<canvas id="myChart" width="400" height="200"></canvas>
+<script>
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+            labels: [{% for data in elapsedtime %} '{{data}}', {% endfor %}],
+
+            datasets: [{
+                label: 'Distance Travelled',
+                data: [{% for data in abdomenlist %} '{{data}}', {% endfor %}],
+                //pointHoverRadius: 0,
+                //pointBorderWidth: 0,
+                pointRadius: 0,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                hoverOffset: 2,
+                tension: 0.1,
+            }]
+        },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+      // elements: {
+      //         point:{
+      //             radius: 0
+      //         }
+      //     }
+    }
+  });
+</script>
+
+<div>
+  <button type="button" onclick="location.href='{% url 'log' %}' ">Logout</button>
+</div>
+{% endblock %}
