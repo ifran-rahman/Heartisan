@@ -2,29 +2,67 @@
 {% load static %}
 
 {% block body_block %}
-<form action="/postsignUp/" method="post">
+<form action="/postsignUp/" method="POST">
 	{% csrf_token %}
 	<br/>
 	<h1>Sign Up</h1>
 
 <p>Please fill in this form</p>
 
-	<label for="username">Username</label>
-	<input type="name" id="Username" name="name" placeholder="Your Name"><br><br>
+	<label for="username">Username:</label>
+	<input type="name" id="Username" name="name" placeholder="Your Name" required><br><br>
 	<!-- Email: -->
-	<label for="Email" >Email</label>
-	<input type="email" id="Email" name="email" placeholder="Your Email Id"><br><br>
+	<label for="Email" >Email:</label>
+	<input type="email" id="Email" name="email" placeholder="Your Email Id" required><br><br>
 	<!-- Password: -->
-	<label for="Password">Password/label>
-	<input type="password" id="Password" name="pass" placeholder="Password"><br><br>
+	<label for="Password">Password:</label>
+	<input type="password" id="Password" name="pass" placeholder="Password" required><br><br>
 	<!-- RepeatPassword: -->
-	<label for="confirm_password">Confirm Password</label>
-	<input type="password" id="confirm_password" name="pass-repeat" placeholder=" Repeat Password"><br><br>
-	<label>
-	<input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-	</label>
+	<label for="confirm_password">Confirm Password:</label>
+	<input type="password" id="confirm_password" name="pass-repeat" placeholder=" Repeat Password" required><br><br>
 
-	<input type="submit" value="SignUp"><br><br>
+	<!--age-->
+	<label for="Age">Age:</label>
+	<input type="text" id="Age" name="age" placeholder=" Age" required><br><br>
+	<!--Gender: -->
+	<div class="Gender">
+		<label for="Gender" name='gender'>Gender: </label>
+	  <label for="Male">Male
+	    <input type="radio" id="Male" name="gender" value="Male">
+	  </label>
+
+	  <label for="Female">Female
+	    <input type="radio" id="Female" name="gender" value="Female">
+	  </label>
+
+	  <label for="Other">Other
+	    <input type="radio" id="Other" name="gender" value="Other">
+	  </label><br>
+	</div>
+	<div class="Blood Group">
+	  <label for="Blood Group" name="bloodgroup">Blood Group:
+	    <select class="Blood Group" name="bloodgroup">
+	      <option value="A+">A+</option>
+	      <option value="A-">A-</option>
+	      <option value="B+">B+</option>
+				<option value="B-">B-</option>
+	      <option value="AB+">AB+</option>
+	      <option value="AB-">AB-</option>
+	      <option value="O+">O+</option>
+	      <option value="O-">O-</option>
+	    </select>
+	</div>
+	<!--Agreed-->
+	<div class="">
+	<label for="agreed">I agree to the terms and conditions:</label>
+	<input  id="agreed" name="agreed" type="checkbox">
+	</div>
+
+	<input type="submit" value="SignUp">
+	<!--<a href="'{% url 'signIn' %}'">SignUp</a></input>-->
+	<!--<button type="button" onclick="location.href='{% url 'signIn' %} '"></button>-->
+
+
 
 </form>
 {% endblock %}
