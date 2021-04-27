@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "nav.html" %}
 {% load static %}
 
 
@@ -11,16 +11,14 @@
 	</script>
 {% endif%}
 
-<div class="back">
-  <a href="/"><i class='fas fa-arrow-left' style='font-size:22px'></i>Back</a>
-</div>
+
 <div class="container">
   <div class="inner">
     <h1>Reset Your Password</h1><br>
     <form action="/postReset/" method="POST">
       {% csrf_token %}
       <input type="email" name="email" id="email" placeholder="Enter Your email" required><br><br>
-      <input type="submit" value="Send Reset Link">
+      <input type="submit" class="btn btn-outline-success btn-sm" value="Send Reset Link">
     </form>
   </div>
 </div>

@@ -22,6 +22,7 @@ urlpatterns = [
 
     # Here we are assigning the path of our url
     path('', views.signIn,name="signIn"),
+    path('home/', views.home,name="home"),
     path('postsignIn/', views.postsignIn),
     path('signUp/', views.signUp, name="signup"),
     path('logout/', views.logout, name="log"),
@@ -29,4 +30,7 @@ urlpatterns = [
     path('reset/', views.reset,name="reset"),
     path('postReset/', views.postReset),
     path('graph/',views.line_graph,name='graph'),
+    path('postgraph/', views.postgraph),
+
+
 ]

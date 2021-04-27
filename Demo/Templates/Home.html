@@ -1,9 +1,36 @@
-{% extends "base.html" %}
+{% extends "nav.html" %}
 {% load static %}
 
 {% block body_block %}
+
+<div class="row mt-3 pt-3">
+  <div class="col-md-4">
+      <div class="border p-3 shadow">
+          <h3> <u>User Profile</u>  </h3>
+
+          <p><h4>Name:</h4>{{dict.name}}</p>
+          <p><h4>Age:</h4>{{dict.age}}</p>
+          <p><h4>Gender:</h4>{{dict.gender}}</p>
+          <p><h4>Bloodgroup:</h4>{{dict.bloodgroup}}</p>
+      </div>
+  </div>
+  <div class="col-md-4">
+    <div class="border p-3 shadow">
+      <h3> <u>ECG Dates</u>  </h3>
+
+      <form action='/graph/' method="get">
+        {% for i in ecgdates %}
+        <br>
+        <br>
+        <input type="submit" name="date" class="btn btn-outline-primary btn-sm" value='{{i}}' onclick="location.href='{% url 'graph' %}' ">
+        {% endfor %}
+      </form>
+
+    </div>
+  </div>
+</div>
 <br><br>
 <div>
-<button type="button" onclick="location.href='{% url 'log' %}' ">Logout</button>
+<!-- <button type="button" class="btn btn-outline-danger btn-sm" onclick="location.href='{% url 'log' %}' ">Logout</button> -->
 </div>
 {% endblock %}

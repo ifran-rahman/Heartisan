@@ -5,26 +5,53 @@
 
 
 {% block body_block %}
+
 {% if message %}
 <script>
 	alert('{{ message }}');
 </script>
 {% endif %}
-<form action="/postsignIn/" method="post">
-	{% csrf_token %}
-	<br/>
-<!-- Enter Your Email: -->
-	<label for="Email">Email</label>
-	<input type="email"id="Email" name="email"><br><br>
-<!-- Enter Your Password: -->
-	<label for="Password">Password</label>
-	<input type="password" id="Password" name="pass"><br><br>
-	<input type="submit" value="Login"><br><br>
-	<p style="color: black;padding: 10px 0;">Forgot Password? <a href="/reset/" style="color: black;">Click Here to Reset</a></p>
 
-	<label>
-	<input type="checkbox" checked="checked" name="remember"> Remember me
-	</label>
-	<button type="button" onclick="location.href='{% url 'signup' %} '">SignUp</button>
-</form>
+<div class="container">
+      <div class="window">
+        <div class="text-center mt-5 border p-3 shadow">
+					<h1 class="h3 mb-3 font-weight-normal"> ECG Monitoring Service </h1>
+					<h2 class="h3 mb-3 font-weight-normal"> Login </h2>
+
+					<form action="/postsignIn/" method="POST">
+						{% csrf_token %}
+						<br>
+						<!-- Enter Your Email: -->
+						<input type="email" id="Email" name="email" placeholder="Email" required><br><br>
+						<!-- Enter Your Password: -->
+						<input type="password" id="Password" name="pass" placeholder="Password" required autofocus><br><br>
+
+
+
+						<label>
+							<input type="checkbox" checked="checked" name="remember">Remember me
+						</label>
+
+						<br>
+						<br>
+
+
+						<input type="submit" class="btn btn-success btn-sm" value="Login"><br>
+
+
+						<p style="color: black;padding: 10px 0;"> <a href="{% url 'reset' %}" style="color: black;">Forget Password</a></p>
+
+
+						<!-- <div class="btn btn-primary btn-sm"> -->
+						<!-- <a href="{% url 'signup' %}" class="btn-primary btn-sm">SignUp</a> -->
+
+						<!-- </div> -->
+
+					</form>
+
+					<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='{% url 'signup' %} '">Create New Account</button>
+        </div>
+      </div>
+    </div>
+
 {% endblock %}

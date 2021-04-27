@@ -1,49 +1,60 @@
-{% extends "base.html" %}
+{% extends "nav.html" %}
 {% load static %}
 
 {% block body_block %}
 
 
 
-<!--Chart JS CDN-->
+<div class="row mt-3 pt-3">
+        <div class="col-md-4">
+            <div class="border p-3 shadow">
+                <h4>Select Duration ({{datee}})</h4>
+                <hr>
+                
+                <form action="/postgraph/" method="post">
+                  {% csrf_token %}
+                  <input type="value" name="start" value="" placeholder="Start">
+                  <input type="value" name="end" value="" placeholder="End">
+                  <br>
+                  <br>
+                  <input type="submit" class="btn btn-success btn-sm" name="" value="Submit">
+                </form>
+
+            </div>
+        </div>
+        <div class="col-md-12">
+            <canvas id="myChart" width="400" height="200"></canvas>
+            <script>
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels:  [{% for data in elapsedtime %} '{{data}}', {% endfor %}],
+                        datasets: [{
+                            label: 'ECG Reading',
+                            data: [{% for data in abdomenlist %} '{{data}}', {% endfor %}],
+                            pointRadius: 0,
+                            fill: false,
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1,
+
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+<!-- <canvas id="myChart" width="400" height="200"></canvas> -->
 
 
-<canvas id="myChart" width="400" height="200"></canvas>
-<script>
-  var ctx = document.getElementById('myChart').getContext('2d');
-  var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-            labels: [{% for data in elapsedtime %} '{{data}}', {% endfor %}],
 
-            datasets: [{
-                label: 'Distance Travelled',
-                data: [{% for data in abdomenlist %} '{{data}}', {% endfor %}],
-                //pointHoverRadius: 0,
-                //pointBorderWidth: 0,
-                pointRadius: 0,
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                hoverOffset: 2,
-                tension: 0.1,
-            }]
-        },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-      // elements: {
-      //         point:{
-      //             radius: 0
-      //         }
-      //     }
-    }
-  });
-</script>
 
-<div>
-  <button type="button" onclick="location.href='{% url 'log' %}' ">Logout</button>
-</div>
 {% endblock %}

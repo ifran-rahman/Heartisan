@@ -1,31 +1,64 @@
 from django.shortcuts import render
+from django.contrib import auth
+from django.http import HttpResponse, HttpRequest, request,QueryDict
 import pyrebase
 
 config = {
-    'apiKey': "AIzaSyBmbA3rMRI5nol0vIyMsDeDSNTCFoOWrwk",
-    'authDomain': "test1-80f19.firebaseapp.com",
-    'databaseURL': "https://test1-80f19-default-rtdb.firebaseio.com",
-    'projectId': "test1-80f19",
-    'storageBucket': "test1-80f19.appspot.com",
-    'messagingSenderId': "825466536050",
-    'appId': "1:825466536050:web:ca8cdf627c31f265eb02eb",
-    'measurementId': "G-3252KZVCX3"
-  };
-
+    "apiKey": "AIzaSyCNgewbNVZWe0Ex2H0oJVuSMgiV8PAfqvc",
+    "authDomain": "test-92aa6.firebaseapp.com",
+    "databaseURL": "https://test-92aa6-default-rtdb.firebaseio.com",
+    "projectId": "test-92aa6",
+    "storageBucket": "test-92aa6.appspot.com",
+    "messagingSenderId": "1020580899643",
+    "appId": "1:1020580899643:web:a859ce9cabbb673e50e51e",
+    "measurementId": "G-DX88ST3VWX"
+};
 # Initialising database,auth and firebase for further use
 firebase = pyrebase.initialize_app(config)
 authe = firebase.auth()
 database = firebase.database()
 
-
+uid=''
+session_id=''
 def signIn(request):
     dict = {'title': 'Login'}
     return render(request, "Login.html", context=dict)
 
 
 def home(request):
-    dict = {'title': 'Home'}
-    return render(request, "Home.html", context=dict)
+    # uid=request.get(request.session['uid'])
+    # session_id = user['idToken']
+    # request.session['uid'] = str(session_id)
+
+    idtoken= request.session['uid']
+    a = authe.get_account_info(idtoken)
+    a = a['users']
+
+    a = a[0]
+    a = a['localId']
+    print(a)
+    userinfo = database.child(a).child("userinfo").get()
+
+    for info in userinfo:
+         infokey = info.key()
+
+    name = database.child(a).child('userinfo').child(infokey).child('name').get().val()
+    age = database.child(a).child('userinfo').child(infokey).child('age').get().val()
+    gender = database.child(a).child('userinfo').child(infokey).child('Gender').get().val()
+    bloodgroup = database.child(a).child('userinfo').child(infokey).child('Bloodgroup').get().val()
+
+    ecgdates = []
+    dict={}
+    #Print dates of ECG tests
+    allecgdatas = database.child(a).child('ecgdatas').get()
+
+
+    for data in allecgdatas:
+        ecgdates.append(data.key())
+
+    print(ecgdates)
+    dict= {'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
+    return render(request, "Home.html",{'title':'Home','dict':dict, 'ecgdates':ecgdates})
 
 
 def postsignIn(request):
@@ -35,29 +68,55 @@ def postsignIn(request):
     try:
         # if there is no error then signin the user with given email and password
         user = authe.sign_in_with_email_and_password(email, pasw)
+
     except:
         message = "Invalid Credentials!!Please ChecK your Data"
         return render(request, "Login.html", {"message": message})
 
+    uid=user['localId']
     session_id = user['idToken']
+
     request.session['uid'] = str(session_id)
 
+    userinfo = database.child(uid).child("userinfo").get()
+
+    for info in userinfo:
+        infokey = info.key()
+
+    name = database.child(uid).child('userinfo').child(infokey).child('name').get().val()
+    age = database.child(uid).child('userinfo').child(infokey).child('age').get().val()
+    gender = database.child(uid).child('userinfo').child(infokey).child('Gender').get().val()
+    bloodgroup = database.child(uid).child('userinfo').child(infokey).child('Bloodgroup').get().val()
+
+
+    dict={'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
+
+    ecgdates = []
+    #Print dates of ECG tests
+    allecgdatas = database.child(uid).child('ecgdatas').get()
+
+
+
+    for data in allecgdatas:
+        ecgdates.append(data.key())
+    
+    # currentuser = authe.getInstance().getCurrentUser().getUid()
+    # data=database.child(uid).child('userinfo').child(infokey).get().val()
     elapsedtime = database.child("ECG1").child("Elapsed time").get().val()
     abdomenlist = database.child("ECG1").child("Abdomen_1").get().val()
     # elapsedti1=elapsedtime.val()
     # abdomenli=abdomenlist.val()
 
-    return render(request, "Home.html", {"email": email, 'elapsedtime': elapsedtime, 'abdomenlist': abdomenlist})
+    return render(request, "Home.html", {'title':'Login', "email": email, 'elapsedtime': elapsedtime, 'abdomenlist': abdomenlist, 'dict':dict, 'ecgdates':ecgdates})
     # data=database.child("ECG1")
 
-    # values={'data':data}
-    # return render(request,"graph.html",values)
+
 def logout(request):
     try:
-        del request.session['uid']
+        auth.logout(request)
     except:
         pass
-    return render(request, "Login.html")
+    return render(request, "Login.html",{"tilte":"Login"})
 
 
 def signup(request):
@@ -108,16 +167,80 @@ def postReset(request):
         message = "Something went wrong, Please check the email you provided is registered or not"
         return render(request, "Reset.html", {"msg": message})
 
-
+datee=''
 def line_graph(request):
-    elapsedtime = database.child("ECG1").child("Elapsed time").get().val()
-    abdomenlist = database.child("ECG1").child("Abdomen_1").get().val()
+    global datee
+    datee=request.GET.get('date')
+    print("This is date")
+    print(datee)
+    # datee="25 April 2021"
+    idtoken= request.session['uid']
+    a = authe.get_account_info(idtoken)
+    a = a['users']
 
-    # data = runner.objects.all()
+    a = a[0]
+    a = a['localId']
+    print(a)
+    timestamps = database.child(a).child("ecgdatas").get()
+    print(timestamps)
+
+    ecgdatas = database.child(a).child("ecgdatas").child(datee).get()
+    print(ecgdatas)
+
+    for data in ecgdatas:
+        ecg = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Abdomen").get().val()
+        time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
     values = {
-        'elapsedtime': elapsedtime,
-        'abdomenlist': abdomenlist,
+        'elapsedtime': time,
+        'abdomenlist': ecg,
+        'title': 'Graph',
+        'datee':datee,
+
     }
 
     return render(request, "graph.html", values)
-    # return render(request,"graph.html",{'elapsedtime':elapsedtime,'abdomenlist':abdomenlist})
+
+
+
+
+
+
+def postgraph(request):
+    start=request.POST.get('start')
+    end=request.POST.get('end')
+
+    global datee
+
+    # date='25 April 2021'
+    idtoken= request.session['uid']
+    a = authe.get_account_info(idtoken)
+    a = a['users']
+
+    a = a[0]
+    a = a['localId']
+    print(a)
+
+    ecgdatas = database.child(a).child("ecgdatas").child(str(datee)).get()
+
+    for data in ecgdatas:
+        ecg = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Abdomen").get().val()
+        time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
+    start=getIndex(start, time)
+    end=getIndex(end, time)
+    values = {
+        'elapsedtime': time[start:end],
+        'abdomenlist': ecg[start:end],
+        'datee':datee,
+        'title': 'Graph',
+
+    }
+
+    return render(request, "graph.html", values)
+
+
+def getIndex(enteredtime, dataset):
+    list = [count + 1 for count, ele in enumerate(dataset) if ele <= float(enteredtime)]
+    x = 0
+    for data in list:
+        x = data
+    return x
