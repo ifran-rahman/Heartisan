@@ -12,34 +12,31 @@
 </script>
 {% endif %}
 
-<div class="container">
-      <div class="window">
-        <div class="text-center mt-5 border p-3 shadow">
-					<h1 class="h3 mb-3 font-weight-normal"> ECG Monitoring Service </h1>
-					<h2 class="h3 mb-3 font-weight-normal"> Login </h2>
+<div class="container"  >
+      <div class="window mt-5" >
+        <div class="text-center mt-5 border p-3 shadow" style="background-color: white"id="roundEdge">
+					<!-- <h1 class="h3 mb-3 font-weight-normal"> ECG </h1> -->
+					<img src="https://firebasestorage.googleapis.com/v0/b/test-92aa6.appspot.com/o/AppImages%2FCapture.PNG?alt=media&token=f65df16b-ee3f-4682-9923-115b2f83e74a" style="max-width: 200px;" class="mb-3">
+					<h2 class="h3 mb-3 font-weight-normal">Login</h2>
 
-					<form action="/postsignIn/" method="POST">
+					<form action="/postsignIn/" method="POST" >
 						{% csrf_token %}
 						<br>
 						<!-- Enter Your Email: -->
-						<input type="email" id="Email" name="email" placeholder="Email" required><br><br>
+						<input class="form-control mb-3" type="email" id="Email" name="email" placeholder="Email" required>
 						<!-- Enter Your Password: -->
-						<input type="password" id="Password" name="pass" placeholder="Password" required autofocus><br><br>
-
+						<input class="form-control mb-3" type="password" id="Password" name="pass" placeholder="Password" required autofocus>
 
 
 						<label>
-							<input type="checkbox" checked="checked" name="remember">Remember me
-						</label>
-
-						<br>
-						<br>
+							<input class="mb-3" type="checkbox" checked="checked" name="remember">Remember me
+						</label><br>
 
 
-						<input type="submit" class="btn btn-success btn-sm" value="Login"><br>
+						<input type="submit" class="btn btn-md btn-success mb-3" value="Login"><br>
 
 
-						<p style="color: black;padding: 10px 0;"> <a href="{% url 'reset' %}" style="color: black;">Forget Password</a></p>
+						<p style="color: black;padding: 10px 0;">Forgot Password? <a href="{% url 'reset' %}" style="color: black;">Click Here.</a></p>
 
 
 						<!-- <div class="btn btn-primary btn-sm"> -->

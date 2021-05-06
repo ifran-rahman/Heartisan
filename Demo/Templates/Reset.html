@@ -1,4 +1,4 @@
-{% extends "nav.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 
@@ -13,13 +13,17 @@
 
 
 <div class="container">
-  <div class="inner">
-    <h1>Reset Your Password</h1><br>
+  <div class="window">
+    <div class="text-center mt-5 border p-3 shadow" style="background-color: white" id="roundEdge">
+  <img src="https://firebasestorage.googleapis.com/v0/b/test-92aa6.appspot.com/o/AppImages%2FCapture.PNG?alt=media&token=f65df16b-ee3f-4682-9923-115b2f83e74a" style="max-width: 200px;" class="mb-3">
+
+    <h1 class="mb-3">Reset Your Password</h1>
     <form action="/postReset/" method="POST">
       {% csrf_token %}
-      <input type="email" name="email" id="email" placeholder="Enter Your email" required><br><br>
-      <input type="submit" class="btn btn-outline-success btn-sm" value="Send Reset Link">
+      <input class="form-control mb-3" type="email" name="email" id="email" placeholder="Enter Your email" required>
+      <input type="submit" class="btn btn-success btn-sm" value="Send Reset Link">
     </form>
   </div>
+</div>
 </div>
 {% endblock %}
