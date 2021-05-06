@@ -99,7 +99,7 @@ def postsignIn(request):
 
     for data in allecgdatas:
         ecgdates.append(data.key())
-    
+
     # currentuser = authe.getInstance().getCurrentUser().getUid()
     # data=database.child(uid).child('userinfo').child(infokey).get().val()
     elapsedtime = database.child("ECG1").child("Elapsed time").get().val()

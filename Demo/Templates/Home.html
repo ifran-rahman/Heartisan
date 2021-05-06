@@ -19,12 +19,25 @@
       <h3> <u>ECG Dates</u>  </h3>
 
       <form action='/graph/' method="get">
-        {% for i in ecgdates %}
-        <br>
-        <br>
-        <input type="submit" name="date" class="btn btn-outline-primary btn-sm" value='{{i}}' onclick="location.href='{% url 'graph' %}' ">
-        {% endfor %}
-      </form>
+
+        <div class="ECGData">
+          <select class="ECGData" name="date">
+            <option value="none" selected disabled hidden>
+              Select Date
+            </option>
+            {% for i in ecgdates %}
+            <option>{{i}}</option>
+
+            {% endfor %}
+            </select>
+            <br>
+            <br>
+            <input type="submit"  class="btn btn-outline-primary btn-sm" value='Submit' onclick="location.href='{% url 'graph' %}' ">
+
+        </div>
+
+        </form>
+
 
     </div>
   </div>
