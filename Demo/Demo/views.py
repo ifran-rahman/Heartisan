@@ -227,12 +227,17 @@ def postgraph(request):
         time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
     start=getIndex(start, time)
     end=getIndex(end, time)
+
+    if start < end and start > 0:
+        message="Here is your requested duration."
+    else:
+        message="Invalid Time Duration." 
     values = {
+        'message':message,
         'elapsedtime': time[start:end],
         'abdomenlist': ecg[start:end],
         'datee':datee,
         'title': 'Graph',
-
     }
 
     return render(request, "graph.html", values)
