@@ -2,6 +2,12 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.http import HttpResponse, HttpRequest, request,QueryDict
 import pyrebase
+from beatcutter import beatcutting
+from tensorflow.keras.models import Model
+from tensorflow.keras.models import load_model
+import h5py
+import pandas as pd
+import numpy as np
 
 config = {
     "apiKey": "AIzaSyCNgewbNVZWe0Ex2H0oJVuSMgiV8PAfqvc",
@@ -114,6 +120,7 @@ def postsignIn(request):
 def logout(request):
     try:
         auth.logout(request)
+        return redirect('signIn')
     except:
         pass
     return render(request, "Login.html",{"tilte":"Login"})
@@ -190,13 +197,38 @@ def line_graph(request):
     for data in ecgdatas:
         ecg = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Abdomen").get().val()
         time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
-    values = {
-        'elapsedtime': time,
-        'abdomenlist': ecg,
-        'title': 'Graph',
-        'datee':datee,
+    # print(ecg)
+    # print(time)
+    beats=beatcutting(ecg)
 
-    }
+    #     print(i+":"+len(beats[i]))
+    # print("Beat 1:")
+    # print(len(beats[1]))
+    # # print(type(beats[1]))
+    beats1=beats[1].tolist()
+    beats[1]= pd.DataFrame(beats[1])
+    #
+    # # print(type(beats[1]))
+    # #
+    # print("Convert into PD")
+    # print(beats[1])
+    #
+    # print(len(beats[1]))
+    beat_t = pd.DataFrame(beats[11]).transpose().to_numpy()
+    print(beats[11].shape)
+    # predictions = model.predict(beats[1])
+    model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
+    predictions = model.predict(beat_t)
+    print(predictions)
+    rounded_predictions = np.argmax(predictions, axis= 1)
+    print(rounded_predictions)
+
+    values = {
+            'elapsedtime': time,
+            'abdomenlist': ecg,
+            'title': 'Graph',
+            'datee':datee,
+        }
 
     return render(request, "graph.html", values)
 
@@ -227,13 +259,18 @@ def postgraph(request):
         time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
     start=getIndex(start, time)
     end=getIndex(end, time)
+
+    if start < end and start > 0:
+        message="Here is your requested duration."
+    else:
+        message="Invalid Time Duration."
+
     values = {
+        'message':message,
         'elapsedtime': time[start:end],
         'abdomenlist': ecg[start:end],
         'datee':datee,
-        'title': 'Graph',
-
-    }
+        'title': 'Graph',}
 
     return render(request, "graph.html", values)
 

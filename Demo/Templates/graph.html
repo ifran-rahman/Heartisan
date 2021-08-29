@@ -6,11 +6,12 @@
 
 
 <div class="row mt-3 pt-3">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <div class="border p-3 shadow">
+              <h4>The Graph's Duration is {{duration}} seconds</h4>
                 <h4>Select Duration ({{datee}})</h4>
                 <hr>
-                
+
                 <form action="/postgraph/" method="post">
                   {% csrf_token %}
                   <input type="value" name="start" value="" placeholder="Start">
