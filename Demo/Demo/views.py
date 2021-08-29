@@ -272,6 +272,7 @@ def postgraph(request):
         'datee':datee,
         'title': 'Graph',}
 
+
     return render(request, "graph.html", values)
 
 

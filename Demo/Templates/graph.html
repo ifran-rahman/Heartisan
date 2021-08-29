@@ -1,4 +1,4 @@
-{% extends "nav.html" %}
+% extends "nav.html" %}
 {% load static %}
 
 {% block body_block %}
@@ -8,14 +8,15 @@
 <div class="row mt-3 pt-3">
         <div class="col-md-5">
             <div class="border p-3 shadow">
-              <h4>The Graph's Duration is {{duration}} seconds</h4>
-                <h4>Select Duration ({{datee}})</h4>
+                <h4>Select Duration for {{datee}}</h4>
                 <hr>
 
                 <form action="/postgraph/" method="post">
+                    <p>To view a speific duration of the graph, enter time durations.</p>
+                    <p>{{message}}</p>
                   {% csrf_token %}
-                  <input type="value" name="start" value="" placeholder="Start">
-                  <input type="value" name="end" value="" placeholder="End">
+                  <input class="mb-1"type="value" name="start" value="" placeholder="Start Time">
+                  <input type="value" name="end" value="" placeholder="End Time">
                   <br>
                   <br>
                   <input type="submit" class="btn btn-success btn-sm" name="" value="Submit">
