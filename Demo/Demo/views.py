@@ -199,35 +199,49 @@ def line_graph(request):
         time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
     # print(ecg)
     # print(time)
-    beats=beatcutting(ecg)
-
-    #     print(i+":"+len(beats[i]))
-    # print("Beat 1:")
-    # print(len(beats[1]))
-    # # print(type(beats[1]))
-    beats1=beats[1].tolist()
-    beats[1]= pd.DataFrame(beats[1])
+    # beats=beatcutting(ecg)
     #
-    # # print(type(beats[1]))
+    # #     print(i+":"+len(beats[i]))
+    # # print("Beat 1:")
+    # # print(len(beats[1]))
+    # # # print(type(beats[1]))
+    # beats1=beats[1].tolist()
+    # beats[1]= pd.DataFrame(beats[1])
     # #
-    # print("Convert into PD")
-    # print(beats[1])
+    # # # print(type(beats[1]))
+    # # #
+    # # print("Convert into PD")
+    # # print(beats[1])
+    # #
+    # # print(len(beats[1]))
+    # beat_t = pd.DataFrame(beats[1]).transpose().to_numpy()
+    # print(beats[1].shape)
+    # # predictions = model.predict(beats[1])
+    # model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
+    # predictions = model.predict(beat_t)
+    # print(predictions)
+    # rounded_predictions = np.argmax(predictions, axis= 1)
+    # print(rounded_predictions)
     #
-    # print(len(beats[1]))
-    beat_t = pd.DataFrame(beats[11]).transpose().to_numpy()
-    print(beats[11].shape)
-    # predictions = model.predict(beats[1])
-    model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
-    predictions = model.predict(beat_t)
-    print(predictions)
-    rounded_predictions = np.argmax(predictions, axis= 1)
-    print(rounded_predictions)
-
+    # for i in rounded_predictions:
+    #     rounded_predictions=i
+    #
+    # if (rounded_predictions == 0):
+    #     predicted_result = "Heart Condition: Everything Seems Normal!"
+    # elif (rounded_predictions == 1):
+    #     predicted_result = "Heart Condition: Supraventricular ectopic beat detected."
+    # elif (rounded_predictions == 2):
+    #     predicted_result = "Heart Condition: Ventricular ectopic beat detected."
+    # elif (rounded_predictions == 3):
+    #     predicted_result = "Heart Condition: Fusion beat detected."
+    # else:
+    #     predicted_result = "Heart Condition: Unknown beat detected."
     values = {
             'elapsedtime': time,
             'abdomenlist': ecg,
             'title': 'Graph',
             'datee':datee,
+            # 'predicted_result':predicted_result,
         }
 
     return render(request, "graph.html", values)
@@ -282,3 +296,64 @@ def getIndex(enteredtime, dataset):
     for data in list:
         x = data
     return x
+
+
+def prediction_graph(request):
+    global datee
+    # datee=request.GET.get('date')
+    print("This is date")
+    print(datee)
+    # datee="25 April 2021"
+    idtoken= request.session['uid']
+    a = authe.get_account_info(idtoken)
+    a = a['users']
+
+    a = a[0]
+    a = a['localId']
+    print(a)
+    timestamps = database.child(a).child("ecgdatas").get()
+    print(timestamps)
+
+    ecgdatas = database.child(a).child("ecgdatas").child(datee).get()
+    print(ecgdatas)
+
+    for data in ecgdatas:
+        ecg = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Abdomen").get().val()
+        time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
+
+    beats=beatcutting(ecg)
+
+    beats1=beats[1].tolist()
+    beats[1]= pd.DataFrame(beats[1])
+
+    beat_t = pd.DataFrame(beats[1]).transpose().to_numpy()
+    print(beats[1].shape)
+    # predictions = model.predict(beats[1])
+    model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
+    predictions = model.predict(beat_t)
+    print(predictions)
+    rounded_predictions = np.argmax(predictions, axis= 1)
+    print(rounded_predictions)
+
+    for i in rounded_predictions:
+        rounded_predictions=i
+
+    if (rounded_predictions == 0):
+        predicted_result = "Heart Condition: Everything Seems Normal!"
+    elif (rounded_predictions == 1):
+        predicted_result = "Heart Condition: Supraventricular ectopic beat detected."
+    elif (rounded_predictions == 2):
+        predicted_result = "Heart Condition: Ventricular ectopic beat detected."
+    elif (rounded_predictions == 3):
+        predicted_result = "Heart Condition: Fusion beat detected."
+    else:
+        predicted_result = "Heart Condition: Unknown beat detected."
+    values = {
+            'elapsedtime': time,
+            'abdomenlist': ecg,
+            'title': 'Graph',
+            'datee':datee,
+            'predicted_result':predicted_result,
+        }
+
+    return render(request, "graph2.html", values)

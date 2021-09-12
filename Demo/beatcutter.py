@@ -34,6 +34,8 @@ def beatcutting(channel):
 
     # print(len(channel))
     # print(type(channel))
+    channel = [int(i) for i in channel]
+    # print ("Data type of channel" + str(type(channel[1]))
     out = ecg.ecg(signal=channel, sampling_rate=360, show=False)
     rpeaks = np.zeros_like(channel, dtype='float')
     rpeaks[out['rpeaks']] = 1.0

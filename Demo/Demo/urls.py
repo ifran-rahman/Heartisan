@@ -31,6 +31,7 @@ urlpatterns = [
     path('postReset/', views.postReset),
     path('graph/',views.line_graph,name='graph'),
     path('postgraph/', views.postgraph),
+    path('graph2/',views.prediction_graph,name='graph2'),
 
 
 ]
