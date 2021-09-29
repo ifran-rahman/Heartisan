@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.http import HttpResponse, HttpRequest, request,QueryDict
 import pyrebase
-from beatcutter import beatcutting, getIndex
+from dataProcessor import beatcutting, getIndex
 from tensorflow.keras.models import Model
 from tensorflow.keras.models import load_model
 import h5py
@@ -249,12 +249,7 @@ def postgraph(request):
     return render(request, "graph.html", values)
 
 
-# def getIndex(enteredtime, dataset):
-#     list = [count + 1 for count, ele in enumerate(dataset) if ele <= float(enteredtime)]
-#     x = 0
-#     for data in list:
-#         x = data
-#     return x
+
 
 
 def prediction_graph(request):
