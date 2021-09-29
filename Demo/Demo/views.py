@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.http import HttpResponse, HttpRequest, request,QueryDict
 import pyrebase
-from beatcutter import beatcutting
+from beatcutter import beatcutting, getIndex
 from tensorflow.keras.models import Model
 from tensorflow.keras.models import load_model
 import h5py
@@ -19,6 +19,7 @@ config = {
     "appId": "1:1020580899643:web:a859ce9cabbb673e50e51e",
     "measurementId": "G-DX88ST3VWX"
 };
+
 # Initialising database,auth and firebase for further use
 firebase = pyrebase.initialize_app(config)
 authe = firebase.auth()
@@ -32,9 +33,7 @@ def signIn(request):
 
 
 def home(request):
-    # uid=request.get(request.session['uid'])
-    # session_id = user['idToken']
-    # request.session['uid'] = str(session_id)
+
 
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
@@ -106,12 +105,10 @@ def postsignIn(request):
     for data in allecgdatas:
         ecgdates.append(data.key())
 
-    # currentuser = authe.getInstance().getCurrentUser().getUid()
-    # data=database.child(uid).child('userinfo').child(infokey).get().val()
+
     elapsedtime = database.child("ECG1").child("Elapsed time").get().val()
     abdomenlist = database.child("ECG1").child("Abdomen_1").get().val()
-    # elapsedti1=elapsedtime.val()
-    # abdomenli=abdomenlist.val()
+ 
 
     return render(request, "Home.html", {'title':'Login', "email": email, 'elapsedtime': elapsedtime, 'abdomenlist': abdomenlist, 'dict':dict, 'ecgdates':ecgdates})
     # data=database.child("ECG1")
@@ -197,45 +194,7 @@ def line_graph(request):
     for data in ecgdatas:
         ecg = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Abdomen").get().val()
         time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
-    # print(ecg)
-    # print(time)
-    # beats=beatcutting(ecg)
-    #
-    # #     print(i+":"+len(beats[i]))
-    # # print("Beat 1:")
-    # # print(len(beats[1]))
-    # # # print(type(beats[1]))
-    # beats1=beats[1].tolist()
-    # beats[1]= pd.DataFrame(beats[1])
-    # #
-    # # # print(type(beats[1]))
-    # # #
-    # # print("Convert into PD")
-    # # print(beats[1])
-    # #
-    # # print(len(beats[1]))
-    # beat_t = pd.DataFrame(beats[1]).transpose().to_numpy()
-    # print(beats[1].shape)
-    # # predictions = model.predict(beats[1])
-    # model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
-    # predictions = model.predict(beat_t)
-    # print(predictions)
-    # rounded_predictions = np.argmax(predictions, axis= 1)
-    # print(rounded_predictions)
-    #
-    # for i in rounded_predictions:
-    #     rounded_predictions=i
-    #
-    # if (rounded_predictions == 0):
-    #     predicted_result = "Heart Condition: Everything Seems Normal!"
-    # elif (rounded_predictions == 1):
-    #     predicted_result = "Heart Condition: Supraventricular ectopic beat detected."
-    # elif (rounded_predictions == 2):
-    #     predicted_result = "Heart Condition: Ventricular ectopic beat detected."
-    # elif (rounded_predictions == 3):
-    #     predicted_result = "Heart Condition: Fusion beat detected."
-    # else:
-    #     predicted_result = "Heart Condition: Unknown beat detected."
+
     values = {
             'elapsedtime': time,
             'abdomenlist': ecg,
@@ -290,12 +249,12 @@ def postgraph(request):
     return render(request, "graph.html", values)
 
 
-def getIndex(enteredtime, dataset):
-    list = [count + 1 for count, ele in enumerate(dataset) if ele <= float(enteredtime)]
-    x = 0
-    for data in list:
-        x = data
-    return x
+# def getIndex(enteredtime, dataset):
+#     list = [count + 1 for count, ele in enumerate(dataset) if ele <= float(enteredtime)]
+#     x = 0
+#     for data in list:
+#         x = data
+#     return x
 
 
 def prediction_graph(request):

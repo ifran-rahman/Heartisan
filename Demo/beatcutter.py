@@ -65,3 +65,10 @@ def beatcutting(channel):
         beats[idx] = np.pad(beats[idx], (0, zerocount), 'constant', constant_values=(0.0, 0.0))
         # print(len(beats[idx]))
     return beats
+
+def getIndex(enteredtime, dataset):
+    list = [count + 1 for count, ele in enumerate(dataset) if ele <= float(enteredtime)]
+    x = 0
+    for data in list:
+        x = data
+    return x
