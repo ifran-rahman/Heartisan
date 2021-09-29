@@ -22,20 +22,10 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.models import load_model
 
 
-
-# load raw ECG signal
-#channel, mdata = storage.load_txt('./ecg2.txt')
-
-#convert channel from ndarray to list
-#channel = channel.tolist()
-#print(type(channel))
-
 def beatcutting(channel):
 
-    # print(len(channel))
-    # print(type(channel))
+
     channel = [int(i) for i in channel]
-    # print ("Data type of channel" + str(type(channel[1]))
     out = ecg.ecg(signal=channel, sampling_rate=360, show=False)
     rpeaks = np.zeros_like(channel, dtype='float')
     rpeaks[out['rpeaks']] = 1.0
@@ -63,7 +53,6 @@ def beatcutting(channel):
             # Pad with zeroes.
         zerocount = 187 - beats[idx].size
         beats[idx] = np.pad(beats[idx], (0, zerocount), 'constant', constant_values=(0.0, 0.0))
-        # print(len(beats[idx]))
     return beats
 
 def getIndex(enteredtime, dataset):
