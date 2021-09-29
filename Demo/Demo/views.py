@@ -197,17 +197,13 @@ def line_graph(request):
 
     values = {
             'elapsedtime': time,
-            'abdomenlist': ecg,
+            'ecglist': ecg,
             'title': 'Graph',
             'date':date,
             # 'predicted_result':predicted_result,
         }
 
     return render(request, "graph.html", values)
-
-
-
-
 
 
 def postgraph(request):
@@ -247,9 +243,6 @@ def postgraph(request):
 
 
     return render(request, "graph.html", values)
-
-
-
 
 def prediction_graph(request):
     global date
