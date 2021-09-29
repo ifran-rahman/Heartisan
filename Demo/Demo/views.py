@@ -171,13 +171,13 @@ def postReset(request):
         message = "Something went wrong, Please check the email you provided is registered or not"
         return render(request, "Reset.html", {"msg": message})
 
-datee=''
+date=''
 def line_graph(request):
-    global datee
-    datee=request.GET.get('date')
+    global date
+    date=request.GET.get('date')
     print("This is date")
-    print(datee)
-    # datee="25 April 2021"
+    print(date)
+    # date="25 April 2021"
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
     a = a['users']
@@ -188,18 +188,18 @@ def line_graph(request):
     timestamps = database.child(a).child("ecgdatas").get()
     print(timestamps)
 
-    ecgdatas = database.child(a).child("ecgdatas").child(datee).get()
+    ecgdatas = database.child(a).child("ecgdatas").child(date).get()
     print(ecgdatas)
 
     for data in ecgdatas:
-        ecg = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Abdomen").get().val()
-        time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
+        ecg = database.child(a).child("ecgdatas").child(str(date)).child(data.key()).child("Abdomen").get().val()
+        time = database.child(a).child("ecgdatas").child(str(date)).child(data.key()).child("Time").get().val()
 
     values = {
             'elapsedtime': time,
             'abdomenlist': ecg,
             'title': 'Graph',
-            'datee':datee,
+            'date':date,
             # 'predicted_result':predicted_result,
         }
 
@@ -214,7 +214,7 @@ def postgraph(request):
     start=request.POST.get('start')
     end=request.POST.get('end')
 
-    global datee
+    global date
 
     # date='25 April 2021'
     idtoken= request.session['uid']
@@ -225,11 +225,11 @@ def postgraph(request):
     a = a['localId']
     print(a)
 
-    ecgdatas = database.child(a).child("ecgdatas").child(str(datee)).get()
+    ecgdatas = database.child(a).child("ecgdatas").child(str(date)).get()
 
     for data in ecgdatas:
-        ecg = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Abdomen").get().val()
-        time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
+        ecg = database.child(a).child("ecgdatas").child(str(date)).child(data.key()).child("Abdomen").get().val()
+        time = database.child(a).child("ecgdatas").child(str(date)).child(data.key()).child("Time").get().val()
     start=getIndex(start, time)
     end=getIndex(end, time)
 
@@ -241,8 +241,8 @@ def postgraph(request):
     values = {
         'message':message,
         'elapsedtime': time[start:end],
-        'abdomenlist': ecg[start:end],
-        'datee':datee,
+        'ecglist': ecg[start:end],
+        'date':date,
         'title': 'Graph',}
 
 
@@ -251,13 +251,12 @@ def postgraph(request):
 
 
 
-
 def prediction_graph(request):
-    global datee
-    # datee=request.GET.get('date')
+    global date
+    # date=request.GET.get('date')
     print("This is date")
-    print(datee)
-    # datee="25 April 2021"
+    print(date)
+    # date="25 April 2021"
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
     a = a['users']
@@ -268,12 +267,12 @@ def prediction_graph(request):
     timestamps = database.child(a).child("ecgdatas").get()
     print(timestamps)
 
-    ecgdatas = database.child(a).child("ecgdatas").child(datee).get()
+    ecgdatas = database.child(a).child("ecgdatas").child(date).get()
     print(ecgdatas)
 
     for data in ecgdatas:
-        ecg = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Abdomen").get().val()
-        time = database.child(a).child("ecgdatas").child(str(datee)).child(data.key()).child("Time").get().val()
+        ecg = database.child(a).child("ecgdatas").child(str(date)).child(data.key()).child("Abdomen").get().val()
+        time = database.child(a).child("ecgdatas").child(str(date)).child(data.key()).child("Time").get().val()
 
     beats=beatcutting(ecg)
 
@@ -306,7 +305,7 @@ def prediction_graph(request):
             'elapsedtime': time,
             'abdomenlist': ecg,
             'title': 'Graph',
-            'datee':datee,
+            'date':date,
             'predicted_result':predicted_result,
         }
 

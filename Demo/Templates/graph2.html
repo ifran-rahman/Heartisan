@@ -35,7 +35,7 @@
                         labels:  [{% for data in elapsedtime %} '{{data}}', {% endfor %}],
                         datasets: [{
                             label: 'ECG Reading',
-                            data: [{% for data in abdomenlist %} '{{data}}', {% endfor %}],
+                            data: [{% for data in ecglist %} '{{data}}', {% endfor %}],
                             pointRadius: 0,
                             fill: false,
                             borderColor: 'rgb(75, 192, 192)',
