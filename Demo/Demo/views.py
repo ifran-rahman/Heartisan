@@ -107,10 +107,10 @@ def postsignIn(request):
 
 
     elapsedtime = database.child("ECG1").child("Elapsed time").get().val()
-    abdomenlist = database.child("ECG1").child("Abdomen_1").get().val()
+    ecglist = database.child("ECG1").child("Abdomen_1").get().val()
  
 
-    return render(request, "Home.html", {'title':'Login', "email": email, 'elapsedtime': elapsedtime, 'abdomenlist': abdomenlist, 'dict':dict, 'ecgdates':ecgdates})
+    return render(request, "Home.html", {'title':'Login', "email": email, 'elapsedtime': elapsedtime, 'ecglist': ecglist, 'dict':dict, 'ecgdates':ecgdates})
     # data=database.child("ECG1")
 
 
@@ -180,13 +180,11 @@ def line_graph(request):
     # date="25 April 2021"
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
-    a = a['users']
+    a = a['users']    #What is a?
 
-    a = a[0]
-    a = a['localId']
+    a = a[0]          #What is a[0]???
+    a = a['localId']  #a is to be changed to "UID"
     print(a)
-    timestamps = database.child(a).child("ecgdatas").get()
-    print(timestamps)
 
     ecgdatas = database.child(a).child("ecgdatas").child(date).get()
     print(ecgdatas)
@@ -199,8 +197,7 @@ def line_graph(request):
             'elapsedtime': time,
             'ecglist': ecg,
             'title': 'Graph',
-            'date':date,
-            # 'predicted_result':predicted_result,
+            'date':date
         }
 
     return render(request, "graph.html", values)
@@ -212,14 +209,12 @@ def postgraph(request):
 
     global date
 
-    # date='25 April 2021'
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
     a = a['users']
 
     a = a[0]
     a = a['localId']
-    print(a)
 
     ecgdatas = database.child(a).child("ecgdatas").child(str(date)).get()
 
@@ -246,19 +241,16 @@ def postgraph(request):
 
 def prediction_graph(request):
     global date
-    # date=request.GET.get('date')
+
     print("This is date")
     print(date)
-    # date="25 April 2021"
+
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
     a = a['users']
 
     a = a[0]
     a = a['localId']
-    print(a)
-    timestamps = database.child(a).child("ecgdatas").get()
-    print(timestamps)
 
     ecgdatas = database.child(a).child("ecgdatas").child(date).get()
     print(ecgdatas)
@@ -271,10 +263,9 @@ def prediction_graph(request):
 
     beats1=beats[1].tolist()
     beats[1]= pd.DataFrame(beats[1])
-
     beat_t = pd.DataFrame(beats[1]).transpose().to_numpy()
     print(beats[1].shape)
-    # predictions = model.predict(beats[1])
+
     model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
     predictions = model.predict(beat_t)
     print(predictions)
@@ -294,9 +285,10 @@ def prediction_graph(request):
         predicted_result = "Heart Condition: Fusion beat detected."
     else:
         predicted_result = "Heart Condition: Unknown beat detected."
+
     values = {
             'elapsedtime': time,
-            'abdomenlist': ecg,
+            'ecglist': ecg,
             'title': 'Graph',
             'date':date,
             'predicted_result':predicted_result,
