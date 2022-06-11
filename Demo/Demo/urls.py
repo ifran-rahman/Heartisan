@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Here we are assigning the path of our url
-    path('', views.signIn,name="signIn"),
+    path('', views.signIn2,name="signIn2"),
     path('home/', views.home,name="home"),
     path('postsignIn/', views.postsignIn),
     path('signUp/', views.signUp, name="signup"),
@@ -32,6 +32,7 @@ urlpatterns = [
     path('graph/',views.line_graph,name='graph'),
     path('postgraph/', views.postgraph),
     path('graph2/',views.prediction_graph,name='graph2'),
-
-
+    path('validation/',views.validation,name='validation'),
+    path('doctor_portal/',views.doctor_portal,name='doctor_portal'),
+    path('signIn/',views.signIn,name='signIn'),
 ]

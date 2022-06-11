@@ -24,7 +24,6 @@ from tensorflow.keras.models import load_model
 
 def beatcutting(channel):
 
-
     channel = [int(i) for i in channel]
     out = ecg.ecg(signal=channel, sampling_rate=360, show=False)
     rpeaks = np.zeros_like(channel, dtype='float')
@@ -50,7 +49,7 @@ def beatcutting(channel):
             beatstoremove = np.append(beatstoremove, idx)
             continue
 
-            # Pad with zeroes.
+        # Pad with zeroes.
         zerocount = 187 - beats[idx].size
         beats[idx] = np.pad(beats[idx], (0, zerocount), 'constant', constant_values=(0.0, 0.0))
     return beats

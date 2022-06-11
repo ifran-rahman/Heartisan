@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib import auth
 from django.http import HttpResponse, HttpRequest, request,QueryDict
+from matplotlib.pyplot import title
 import pyrebase
 from dataProcessor import beatcutting, getIndex
 from tensorflow.keras.models import Model
@@ -8,16 +9,17 @@ from tensorflow.keras.models import load_model
 import h5py
 import pandas as pd
 import numpy as np
+import random
 
 config = {
-    "apiKey": "AIzaSyCNgewbNVZWe0Ex2H0oJVuSMgiV8PAfqvc",
-    "authDomain": "test-92aa6.firebaseapp.com",
-    "databaseURL": "https://test-92aa6-default-rtdb.firebaseio.com",
-    "projectId": "test-92aa6",
-    "storageBucket": "test-92aa6.appspot.com",
-    "messagingSenderId": "1020580899643",
-    "appId": "1:1020580899643:web:a859ce9cabbb673e50e51e",
-    "measurementId": "G-DX88ST3VWX"
+    'apiKey': "AIzaSyDyBOw4iG5FGfbor2YqDOF9QkX5Mv9XEmA",
+    'authDomain': "ecg-nodemcu.firebaseapp.com",
+    'databaseURL': "https://ecg-nodemcu-default-rtdb.firebaseio.com",
+    'projectId': "ecg-nodemcu",
+    'storageBucket': "ecg-nodemcu.appspot.com",
+    'messagingSenderId': "45897358746",
+    'appId': "1:45897358746:web:7ea053cf5b6bd22993ee23",
+    'measurementId': "G-74D3MKZXL3"
 };
 
 # Initialising database,auth and firebase for further use
@@ -29,16 +31,42 @@ uid=''
 session_id=''
 def signIn(request):
     dict = {'title': 'Login'}
+    return render(request, "Login2.html", context=dict)
+
+def signIn2(request):
+    doctor = request.POST.get('doctor')
+    patient = request.POST.get('patient')
+    if doctor=='Doctor':
+        title="Log in for Doctor"
+    else:
+        title="Log in for Patient"
+
+
+    dict = {'title': title}
     return render(request, "Login.html", context=dict)
 
 
-def home(request):
 
+# get userdata in a dictionary given UID
+def getUserData(UID):
+    userinfo = database.child(UID).child("userinfo").get().val()
+
+    for info in userinfo:
+            infokey = info
+
+    name = database.child(UID).child('userinfo').child(infokey).child('name').get().val()
+    age = database.child(UID).child('userinfo').child(infokey).child('age').get().val()
+    gender = database.child(UID).child('userinfo').child(infokey).child('Gender').get().val()
+    bloodgroup = database.child(UID).child('userinfo').child(infokey).child('Bloodgroup').get().val()
+
+    userData = {'name': name, 'age': age, 'Gender': gender, bloodgroup: 'bloodgroup'}
+    return userData
+
+def home(request):
 
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
     a = a['users']
-
     a = a[0]
     a = a['localId']
     print(a)
@@ -82,6 +110,7 @@ def postsignIn(request):
     session_id = user['idToken']
 
     request.session['uid'] = str(session_id)
+
 
     userinfo = database.child(uid).child("userinfo").get()
 
@@ -239,8 +268,56 @@ def postgraph(request):
 
     return render(request, "graph.html", values)
 
+# Python code to generate
+# random indeces given a list's length
+def getBeatIndices(beats_list_len):
+    # Function to generate
+    # and append them
+    # start = starting range,
+    # end = ending range
+    # num = number of
+    # elements needs to be appended
+    def Rand(start, end, num):
+        res = []
+        for j in range(num):
+            num = random.randint(start, end)
+
+            # if a number already exists in the result list, choose a new number
+            while(num in res):
+                num = random.randint(start, end)
+            res.append(num)
+
+        return res
+
+    # choose radnomly 5 numbers. num must be smaller than beat_len
+    num = 5
+    if (num > beats_list_len):
+        raise Exception("Beats list's length must be greater than number of chosen beats")
+
+    start = 1
+    end = beats_list_len - 1
+
+    return Rand(start, end, num)
+
+# classify and return prediction of a heart beat
+# def getPrediction(beat_t):
+#     model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
+#     predictions = model.predict(beat_t)
+#     rounded_predictions = np.argmax(predictions, axis= 1)
+#     return rounded_predictions
+
+# in real this function holds the classifier model and code
+def getPrediction(beat_t):
+    pred = []
+    pred.append(random.randint(0,5))
+    return pred
+
+global reports 
+reports = []
+
 def prediction_graph(request):
     global date
+     
 
     print("This is date")
     print(date)
@@ -261,16 +338,35 @@ def prediction_graph(request):
 
     beats=beatcutting(ecg)
 
-    beats1=beats[1].tolist()
-    beats[1]= pd.DataFrame(beats[1])
-    beat_t = pd.DataFrame(beats[1]).transpose().to_numpy()
-    print(beats[1].shape)
+    # Generate random beat indices
+    beats_len = len(beats)
+    beat_indices = getBeatIndices(beats_len)
 
-    model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
-    predictions = model.predict(beat_t)
-    print(predictions)
-    rounded_predictions = np.argmax(predictions, axis= 1)
-    print(rounded_predictions)
+    # generate 5 reports randomly and store them in reports list. 
+    # if user wishes to validate we will push the whole list to dataset database otherwise we will use it only to show 
+    # classification results
+
+    # gather the user's data
+    userdata = getUserData(a)
+    age = userdata['age']
+    sex = userdata['Gender']
+
+    for i in beat_indices:
+        beat_t = beats[i]
+        beat_t = beat_t.tolist()
+        heart_condition = getPrediction(beat_t)
+        report_dict = {'age': age, 'sex': sex, 'ecg': beat_t , 'heart_condition': heart_condition, 'classified': False}
+        reports.append(report_dict)
+        
+
+    # # Take the 2nd beat to diagnose
+    # beats1=beats[1].tolist()
+    # beats[1]= pd.DataFrame(beats[1])
+    # beat_t = pd.DataFrame(beats[1]).transpose().to_numpy()
+    # print(beats[1].shape)
+    # rounded_predictions = getPrediction(beat_t)
+    # print(rounded_predictions)
+    rounded_predictions = reports[1]['heart_condition']
 
     for i in rounded_predictions:
         rounded_predictions=i
@@ -290,8 +386,27 @@ def prediction_graph(request):
             'elapsedtime': time,
             'ecglist': ecg,
             'title': 'Graph',
-            'date':date,
+            'date': date,
             'predicted_result':predicted_result,
         }
 
+     
+
     return render(request, "graph2.html", values)
+
+
+
+# push a report to Dataset database
+def PushReport(report_dict):
+    print("Report dict", report_dict)
+    database.child('Dataset').push(report_dict)
+
+
+def validation(request):
+    # when user press confirm button, we will push the data to database
+    list(map(PushReport, reports))
+    return render(request, "Home.html")
+
+
+def doctor_portal(request):
+    return render(request, "doctor_portal.html")
