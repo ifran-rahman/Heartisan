@@ -29,19 +29,20 @@ database = firebase.database()
 
 uid=''
 session_id=''
-def signIn(request):
-    dict = {'title': 'Login'}
+def doctors_signIn(request):
+    title="Log in for Doctor"
+    dict = {'title': title}
+    return render(request, "doctors_login.html", context=dict)
+
+
+def patient_signIn(request):
+    title="Log in for Patient"
+    dict = {'title': title}
     return render(request, "Login2.html", context=dict)
 
+
+
 def signIn2(request):
-    doctor = request.POST.get('doctor')
-    patient = request.POST.get('patient')
-    if doctor=='Doctor':
-        title="Log in for Doctor"
-    else:
-        title="Log in for Patient"
-
-
     dict = {'title': title}
     return render(request, "Login.html", context=dict)
 
@@ -59,7 +60,7 @@ def getUserData(UID):
     gender = database.child(UID).child('userinfo').child(infokey).child('Gender').get().val()
     bloodgroup = database.child(UID).child('userinfo').child(infokey).child('Bloodgroup').get().val()
 
-    userData = {'name': name, 'age': age, 'Gender': gender, bloodgroup: 'bloodgroup'}
+    userData = {'name': name, 'age': age, 'gender': gender, bloodgroup: 'bloodgroup'}
     return userData
 
 def home(request):
@@ -93,6 +94,45 @@ def home(request):
     dict= {'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
     return render(request, "Home.html",{'title':'Home','dict':dict, 'ecgdates':ecgdates})
 
+def getDoctorsData(UID):
+    a = UID
+    userinfo = database.child(UID).child("userinfo").get().val()
+
+    userinfo = database.child('doctors').child(a).child("userinfo").get().val()
+    print(userinfo)
+    for info in userinfo:
+         infokey = info
+
+    name = database.child('doctors').child(a).child('userinfo').child(infokey).child('name').get().val()
+    age = database.child('doctors').child(a).child('userinfo').child(infokey).child('age').get().val()
+    gender = database.child('doctors').child(a).child('userinfo').child(infokey).child('Gender').get().val()
+    bloodgroup = database.child('doctors').child(a).child('userinfo').child(infokey).child('Bloodgroup').get().val()
+
+    doctorsdata = {'name': name, 'age': age, 'gender': gender, bloodgroup: 'bloodgroup'}
+    return doctorsdata
+
+def DoctorsHome(request):
+
+    idtoken= request.session['uid']
+    print("IDTOKEN:",idtoken)
+    a = authe.get_account_info(idtoken)
+    a = a['users']
+    a = a[0]
+    a = a['localId']
+    print(a)
+    # ecgreports = []
+    # dict={}
+    # #Print dates of ECG tests
+    # allecgdatas = database.child(a).child('ecgdatas').get()
+
+
+    # for data in allecgdatas:
+    #     ecgreports.append(data.key())
+
+    # print(ecgreports)
+
+    dict= getDoctorsData(a) #{'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
+    return render(request, "doctors_home.html",{'title':'Home','dict':dict}) #,'ecgdates':ecgreports})
 
 def postsignIn(request):
     email = request.POST.get('email')
@@ -112,18 +152,20 @@ def postsignIn(request):
     request.session['uid'] = str(session_id)
 
 
-    userinfo = database.child(uid).child("userinfo").get()
+    # userinfo = database.child(uid).child("userinfo").get()
 
-    for info in userinfo:
-        infokey = info.key()
+    # for info in userinfo:
+    #     infokey = info.key()
 
-    name = database.child(uid).child('userinfo').child(infokey).child('name').get().val()
-    age = database.child(uid).child('userinfo').child(infokey).child('age').get().val()
-    gender = database.child(uid).child('userinfo').child(infokey).child('Gender').get().val()
-    bloodgroup = database.child(uid).child('userinfo').child(infokey).child('Bloodgroup').get().val()
+    # name = database.child(uid).child('userinfo').child(infokey).child('name').get().val()
+    # age = database.child(uid).child('userinfo').child(infokey).child('age').get().val()
+    # gender = database.child(uid).child('userinfo').child(infokey).child('Gender').get().val()
+    # bloodgroup = database.child(uid).child('userinfo').child(infokey).child('Bloodgroup').get().val()
 
 
-    dict={'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
+    # dict={'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
+
+    dict = getUserData(uid)
 
     ecgdates = []
     #Print dates of ECG tests
@@ -140,8 +182,35 @@ def postsignIn(request):
  
 
     return render(request, "Home.html", {'title':'Login', "email": email, 'elapsedtime': elapsedtime, 'ecglist': ecglist, 'dict':dict, 'ecgdates':ecgdates})
-    # data=database.child("ECG1")
 
+def DoctorsPostSignIn(request):
+    email = request.POST.get('email')
+    pasw = request.POST.get('pass')
+
+    try:
+        # if there is no error then signin the user with given email and password
+        user = authe.sign_in_with_email_and_password(email, pasw)
+
+    except:
+        message = "Invalid Credentials!!Please ChecK your Data"
+        return render(request, "Login.html", {"message": message})
+
+    uid=user['localId']
+    session_id = user['idToken']
+
+    request.session['uid'] = str(session_id)
+
+
+    dict = getDoctorsData(uid)
+
+    reports = database.child('Dataset').get().val()
+
+    report_dict = {}
+    for data in reports:
+        verification = database.child('Dataset').child(str(data)).child('classified').get().val()
+        report_dict[data] = verification
+
+    return render(request, "doctors_home.html", {'title':'Login', "email": email, 'dict':dict, 'reports':report_dict})
 
 def logout(request):
     try:
@@ -349,7 +418,7 @@ def prediction_graph(request):
     # gather the user's data
     userdata = getUserData(a)
     age = userdata['age']
-    sex = userdata['Gender']
+    sex = userdata['gender']
 
     for i in beat_indices:
         beat_t = beats[i]
@@ -409,4 +478,4 @@ def validation(request):
 
 
 def doctor_portal(request):
-    return render(request, "doctor_portal.html")
+    return render(request, "doctors_home.html")

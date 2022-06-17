@@ -19,19 +19,8 @@
 					<img src="https://firebasestorage.googleapis.com/v0/b/test-92aa6.appspot.com/o/AppImages%2FCapture.PNG?alt=media&token=f65df16b-ee3f-4682-9923-115b2f83e74a" style="max-width: 200px;" class="mb-3">
 					<h2 class="h3 mb-3 font-weight-normal">Login</h2>
 
-					<form action="/signIn/" method="POST" >
-						{% csrf_token %}
-
-						<!-- <label>
-							<input class="mb-3" type="checkbox" checked="checked" name="remember">Remember me
-						</label><br> -->
-						<!-- <input class="form-control mb-3" type="email" id="Email" name="email" placeholder="Email" required> -->
-
-						<input type="submit" class="btn btn-md btn-success mb-3" id="doctor" name="doctor" value="Login as a Doctor"><br>
-						<input type="submit" class="btn btn-md btn-success mb-3" id="Patient" name="patient" value="Login as a Patient"><br>
-
-
-					</form>
+					<button type="button" class="btn btn-outline-success btn-sm" onclick="location.href='{% url 'doctors_signIn' %} '">Login as a Doctor</button>
+					<button type="button" class="btn btn-outline-success btn-sm"  onclick="location.href='{% url 'patient_signIn' %} '">Login as a Patient</button>
 
 					<button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href='{% url 'signup' %} '">Create New Account</button>
         </div>

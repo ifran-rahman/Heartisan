@@ -24,6 +24,7 @@ urlpatterns = [
     path('', views.signIn2,name="signIn2"),
     path('home/', views.home,name="home"),
     path('postsignIn/', views.postsignIn),
+    path('DoctorsPostSignIn/', views.DoctorsPostSignIn),
     path('signUp/', views.signUp, name="signup"),
     path('logout/', views.logout, name="log"),
     path('postsignUp/', views.postsignUp),
@@ -33,6 +34,7 @@ urlpatterns = [
     path('postgraph/', views.postgraph),
     path('graph2/',views.prediction_graph,name='graph2'),
     path('validation/',views.validation,name='validation'),
-    path('doctor_portal/',views.doctor_portal,name='doctor_portal'),
-    path('signIn/',views.signIn,name='signIn'),
+    path('DoctorsHome/',views.DoctorsHome,name='DoctorsHome'),
+    path('doctors_signIn/',views.doctors_signIn,name='doctors_signIn'),
+    path('patient_signIn/',views.patient_signIn,name='patient_signIn'),
 ]
