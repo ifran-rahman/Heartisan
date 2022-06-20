@@ -31,10 +31,13 @@ urlpatterns = [
     path('reset/', views.reset,name="reset"),
     path('postReset/', views.postReset),
     path('graph/',views.line_graph,name='graph'),
+    path('doctors_graph/',views.doctors_graph,name='doctors_graph'),
     path('postgraph/', views.postgraph),
     path('graph2/',views.prediction_graph,name='graph2'),
     path('validation/',views.validation,name='validation'),
     path('DoctorsHome/',views.DoctorsHome,name='DoctorsHome'),
     path('doctors_signIn/',views.doctors_signIn,name='doctors_signIn'),
     path('patient_signIn/',views.patient_signIn,name='patient_signIn'),
+    path('verify_prediction/',views.verify_prediction,name='verify_prediction')
+    
 ]

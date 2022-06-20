@@ -18,32 +18,41 @@
     <div class="border p-3 shadow">
       <h3> <u>ECG Reports</u>  </h3>
 
-      <form action='/graph/' method="get">
 
-        <div class="ECGData">
-          <!-- <select class="ECGData" name="date">
-            <option value="none" selected disabled hidden>
-              Select Report
-            </option> -->
-            <table>
-              <tr>
-                <th>Reports</th>
-                <th>Verified</th>
-              </tr>
-                {% for key, value in reports.items %}
-                  <tr> 
-                    <td>{{key}}</td>
-                    <td>{{value}}</td>
-                  </tr>
-                {% endfor %}
-            </table>
-            </select>
-            <br>
-            <br>
-            <!-- <input type="submit"  class="btn btn-outline-success btn-sm" value='Submit' onclick="location.href='{% url 'graph' %}' "> -->
-        </div>
 
-        </form>
+      <div class="ECGData">
+        <!-- <select class="ECGData" name="date">
+          <option value="none" selected disabled hidden>
+            Select Report
+          </option> -->
+          <table>
+            <tr>
+              <th>Reports</th>
+              <th>Verified</th>
+            </tr>
+              {% for key, value in reports.items %}
+              
+                
+                <tr> 
+                <form action='/doctors_graph/' method="get">
+                  {% csrf_token %} 
+                  <!-- <input type="submit" name= "date" class="btn btn-outline-success btn-sm" value='Submit'> -->
+                  <!-- <td><input type="submit" name="date" value="{{key}}" class="btn btn-outline-success btn-sm" ></td>  -->
+                <td> <input type="submit" name="report"  class="btn btn-outline-success btn-sm" value={{key}}  onclick="location.href='{% url 'doctors_graph' %}' "></td> 
+                
+                <td>{{value}}</td>
+              </tr> 
+              </form>
+              {% endfor %}
+              <!-- <input type="submit"  class="btn btn-outline-success btn-sm" value='Submit' onclick="location.href='{% url 'graph' %}' "> -->
+          </table>
+          </select>
+          <br>
+          <br>
+          <!-- <input type="submit"  class="btn btn-outline-success btn-sm" value='Submit' onclick="location.href='{% url 'graph' %}' "> -->
+      </div>
+
+
 
 
     </div>

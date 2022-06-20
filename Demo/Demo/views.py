@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib import auth
 from django.http import HttpResponse, HttpRequest, request,QueryDict
 from matplotlib.pyplot import title
@@ -130,9 +130,15 @@ def DoctorsHome(request):
     #     ecgreports.append(data.key())
 
     # print(ecgreports)
+    reports = database.child('Dataset').get().val()
+
+    report_dict = {}
+    for data in reports:
+        verification = database.child('Dataset').child(str(data)).child('classified').get().val()
+        report_dict[data] = verification
 
     dict= getDoctorsData(a) #{'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
-    return render(request, "doctors_home.html",{'title':'Home','dict':dict}) #,'ecgdates':ecgreports})
+    return render(request, "doctors_home.html",{'title':'Home','dict':dict,'reports':report_dict}) #,'ecgdates':ecgreports})
 
 def postsignIn(request):
     email = request.POST.get('email')
@@ -268,6 +274,76 @@ def postReset(request):
     except:
         message = "Something went wrong, Please check the email you provided is registered or not"
         return render(request, "Reset.html", {"msg": message})
+def getReport(id):
+    report = database.child('Dataset').get().val()
+    print(report)
+    print(type(report))
+    return report
+
+report=''
+def doctors_graph(request):
+    global report
+    report = str(request.GET.get('report'))
+    print("This is id: ", report)
+    # ecg = database.child('Dataset').get().val()
+
+    ecg = database.child('Dataset').child(report).child('ecg').get().val()
+
+    heart_condition = database.child('Dataset').child(report).child('heart_condition').get().val()
+    # print(heart_condition)
+    
+    # ecg = database.child('Dataset').child(report).get().val()  #.child('ecg').get().val()
+
+    indices = [*range(0, 187, 1)]
+
+    heart_conditions = ['Everything Seems Normal!','Supraventricular ectopic beat detected.','Ventricular ectopic beat detected.',
+    'Fusion beat detected.','Unknown beat detected.']
+
+    if (heart_condition[0] == 0):
+        heart_condition = "Heart Condition: Everything Seems Normal!"
+    elif (heart_condition[0] == 1):
+        heart_condition = "Heart Condition: Supraventricular ectopic beat detected."
+    elif (heart_condition[0] == 2):
+        heart_condition = "Heart Condition: Ventricular ectopic beat detected."
+    elif (heart_condition[0] == 3):
+        heart_condition = "Heart Condition: Fusion beat detected."
+    else:
+        heart_condition = "Heart Condition: Unknown beat detected."
+
+    values = {
+            'elapsedtime': indices,
+            'ecglist': ecg,
+            'title': 'Graph',
+            'date':report,
+            'heart_condition':heart_condition,
+            'heart_conditions':heart_conditions
+        }
+    # print("ecg: ", getReport(report))
+    # print("indices: ", indices)
+    # getReport(report)
+    return render(request, "doctor_graph.html", values)
+
+def verify_prediction(request):
+    validate = str(request.GET.get('validate'))
+
+    if (validate == "Everything Seems Normal!"):
+        heart_condition = 0
+    elif (validate == "Supraventricular ectopic beat detected."):
+        heart_condition = 1
+    elif (validate == "Ventricular ectopic beat detected."):
+        heart_condition = 2
+    elif (validate == "Fusion beat detected."):
+        heart_condition = 3
+    else:
+        heart_condition = 4
+
+    # val = []
+    # val = val.append(heart_condition)
+    database.child('Dataset').child(report).child('heart_condition').set([heart_condition])
+    database.child('Dataset').child(report).child('classified').set('True')
+
+    return redirect('DoctorsHome')
+
 
 date=''
 def line_graph(request):
@@ -282,7 +358,7 @@ def line_graph(request):
 
     a = a[0]          #What is a[0]???
     a = a['localId']  #a is to be changed to "UID"
-    print(a)
+    # print(a)
 
     ecgdatas = database.child(a).child("ecgdatas").child(date).get()
     print(ecgdatas)

@@ -8,24 +8,43 @@
 <div class="row mt-3 pt-3">
         <div class="col-md-4">
             <div class="border p-3 shadow">
-                <h4>Select Duration for {{datee}}</h4>
                 <hr>
 
                 <!-- <p style="color:red">{{predicted_result}}</p> -->
-                <form action="/postgraph/" method="post">
+                <!-- <p>To view a speific duration of the graph, enter time durations.</p> -->
+                <p>{{heart_condition}}</p>
+
+                <form action='/doctors_graph/' method="get">
+
+                    <div class="ECGData">
+                      <select class="ECGData" name="heart_conditions">
+                        <option value="none" selected disabled hidden>
+                          Select Condition
+                        </option>
+                        {% for i in heart_conditions %}
+                        <option>{{i}}</option>
+            
+                        {% endfor %}
+                        </select>
+                        <br>
+                        <br>
+                        
+                    </div>
+            
+                    </form>
+                    <form action='/verify_prediction/' method="post">
+                        {% csrf_token %}
+                        <input type="submit" style="margin:1px" class="btn btn-success btn-sm" name="validate" value="Verify">
+                      </form>
+                
+                <!-- <form action="/postgraph/" method="post">
                     <p>To view a speific duration of the graph, enter time durations.</p>
                     <p>{{message}}</p>
                   {% csrf_token %}
-                  <input class="mb-1"type="value" name="start" value="" placeholder="Start Time">
-                  <input type="value" name="end" value="" placeholder="End Time">
-                  <br>
                   <br>
                   <input type="submit" style="margin:1px" class="btn btn-success btn-sm" name="" value="Submit">
-                </form>
-                <form action='/graph2/' method="post">
-                  {% csrf_token %}
-                  <input type="submit" style="margin:1px" class="btn btn-success btn-sm" name="" value="Diagnose ECG">
-                </form>
+                </form> -->
+               
                 
             
             
