@@ -30,7 +30,7 @@ The arrhythmia classification model classifies arrhythmia from heartbeat. It is 
 <img title="Report visualization page" alt="Alt text" src="/images/doctors-portal-viewsignal.png">
 
 **How to run?**<br />
-git clone https://github.com/ifran-rahman/ECG_Monitoring_System.git  # clone
-cd Demo
-pip install -r requirements.txt  # instal
-py manage.py runserver # start server
+* git clone https://github.com/ifran-rahman/ECG_Monitoring_System.git  # clone
+* cd Demo
+* pip install -r requirements.txt  # instal
+* py manage.py runserver # start server
