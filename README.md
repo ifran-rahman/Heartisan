@@ -34,3 +34,6 @@ The arrhythmia classification model classifies arrhythmia from heartbeat. It is 
 * cd Demo
 * pip install -r requirements.txt  # instal
 * py manage.py runserver # start server
+
+**Contributors**
+[![](https://github.com/remarkablemark.png?size=50)](https://github.com/remarkablemark)
