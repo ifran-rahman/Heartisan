@@ -1,4 +1,4 @@
-# Heartisan: ECG Data Monitoring and Arrhythmia Prediction through continuous learning from patient data.
+# Heartisan: ECG Data Monitoring and Arrhythmia Prediction Through Continuous Learning from Patient Data.
 
 An end to end system to monitor individual patient's ECG results and predict Arrhythmia through continuous learning from patient data
 
