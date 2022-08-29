@@ -4,61 +4,93 @@
 {% block body_block %}
 
 <div class="row mt-3 pt-3">
-  <div class="col-md-4">
-      <div class="border p-3 shadow">
-          <h3> <u>User Profile</u>  </h3>
 
-          <p><h4>Name:</h4>{{dict.name}}</p>
-          <p><h4>Age:</h4>{{dict.age}}</p>
-          <p><h4>Gender:</h4>{{dict.gender}}</p>
-          <p><h4>Bloodgroup:</h4>{{dict.bloodgroup}}</p>
+  <div class="col-md-4">
+    <style>
+      div {
+          border-radius: 6px; 
+      }
+      
+    </style>
+    
+      <div class="border p-3 shadow">
+          <img src="{{dict.image}}" class="img-fluid"><br>
+          <h3><span class='notbold' style="font-weight:normal">Welcome </span> Dr. {{dict.name}}!</h3>
+          <p>{{dict.age}} years old {{dict.gender}}.<br>
+            You have <font color="#f96e44"> <b> {{reports_length.len}} reports</b></font> to check today!
+          </p> 
       </div>
   </div>
   <div class="col-md-4">
     <div class="border p-3 shadow">
-      <h3> <u>ECG Reports</u>  </h3>
-
-
+      <!-- <h3> ECG Reports  </h3> -->
 
       <div class="ECGData">
         <!-- <select class="ECGData" name="date">
           <option value="none" selected disabled hidden>
             Select Report
           </option> -->
-          <table>
-            <tr>
-              <th>Reports</th>
-              <th>Verified</th>
-            </tr>
-              {% for key, value in reports.items %}
+          <h5>Report list</h5>
+          <table class="table">
+            <!-- <thead class="thead-light">
+              <tr>
+                <th scope="col"><h5>Report list</h5></th>
+              </tr>
+            </thead>
+              -->
+            <tbody>
+                {% for key, value in reports.items %}
               
-                
                 <tr> 
                 <form action='/doctors_graph/' method="get">
                   {% csrf_token %} 
-                  <!-- <input type="submit" name= "date" class="btn btn-outline-success btn-sm" value='Submit'> -->
-                  <!-- <td><input type="submit" name="date" value="{{key}}" class="btn btn-outline-success btn-sm" ></td>  -->
-                <td> <input type="submit" name="report"  class="btn btn-outline-success btn-sm" value={{key}}  onclick="location.href='{% url 'doctors_graph' %}' "></td> 
-                
-                <td>{{value}}</td>
-              </tr> 
+                <td> <input type="submit" name="report"  class="btn btn-outline-danger w-100 h-6" value={{key}}  onclick="location.href='{% url 'doctors_graph' %}' "></td> 
+                <!-- <td>{{value}}</td> -->
               </form>
               {% endfor %}
-              <!-- <input type="submit"  class="btn btn-outline-success btn-sm" value='Submit' onclick="location.href='{% url 'graph' %}' "> -->
+              </tr>
+            </tbody>
           </table>
-          </select>
+          
           <br>
           <br>
-          <!-- <input type="submit"  class="btn btn-outline-success btn-sm" value='Submit' onclick="location.href='{% url 'graph' %}' "> -->
       </div>
+    </div>
+  </div>  
+  <div class="col-md-4">
+    <div class="border p-3 shadow">
+      <!-- <h3> ECG Reports  </h3> -->
 
-
-
-
+      <div class="ECGData">
+        <!-- <select class="ECGData" name="date">
+          <option value="none" selected disabled hidden>
+            Select Report
+          </option> -->
+    <h5>Verified reports</h5>
+          <table class="table">
+            <!-- <thead class="thead-dark">
+              <tr>
+                <th scope="col"><h5>Verified reports</h5></th>
+              </tr>
+            </thead> -->
+            <tbody>
+                {% for key, value in verified_reports.items %}
+              
+                <tr> 
+                <form action='/doctors_graph/' method="get">
+                  {% csrf_token %} 
+                <td> <input type="submit" name="report"  class="btn btn-outline-success w-100 h-6" value={{key}}  onclick="location.href='{% url 'doctors_graph' %}' "></td> 
+              </form>
+              {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+          
+          <br>
+          <br>
+      </div>
     </div>
   </div>
-<br><br>
 <div>
-<!-- <button type="button" class="btn btn-outline-danger btn-sm" onclick="location.href='{% url 'log' %}' ">Logout</button> -->
 </div>
 {% endblock %}

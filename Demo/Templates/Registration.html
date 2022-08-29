@@ -6,7 +6,7 @@
 <div class="container">
       <div class="window">
         <div class="text-center mt-5 border p-3 shadow" style="background-color: white" id="roundEdge">
-			<img src="https://firebasestorage.googleapis.com/v0/b/test-92aa6.appspot.com/o/AppImages%2FCapture.PNG?alt=media&token=f65df16b-ee3f-4682-9923-115b2f83e74a" style="max-width: 200px;" class="mb-3">
+			<img src="https://firebasestorage.googleapis.com/v0/b/test-92aa6.appspot.com/o/AppImages%2FCapture.PNG?alt=media&token=f65df16b-ee3f-4682-9923-115b2f83e74a" style="max-width: 100px;" class="mb-3">
 
 
 					<form action="/postsignUp/" method="POST">
@@ -16,20 +16,19 @@
 						<br>
 
 						<!-- <label for="username">Username:</label> -->
-						<input class="form-control" type="name" id="Username" name="name" placeholder="Your Name" required autofocus><br><br>
+						<input class="form-control" type="name" id="Username" name="name" placeholder="Your Name" required autofocus><br>
 						<!-- Email: -->
 						<!-- <label for="Email">Email:</label> -->
-						<input class="form-control" type="email" id="Email" name="email" placeholder="Your Email Id" required autofocus><br><br>
+						<input class="form-control" type="email" id="Email" name="email" placeholder="Your Email Id" required autofocus><br>
 						<!-- Password: -->
 						<!-- <label for="Password">Password:</label> -->
-						<input class="form-control" type="password" id="Password" name="pass" placeholder="Password" required autofocus><br><br>
+						<input class="form-control" type="password" id="Password" name="pass" placeholder="Password" required autofocus><br>
 						<!-- RepeatPassword: -->
 						<!-- <label for="confirm_password">Confirm Password:</label> -->
-						<input class="form-control" type="password" id="confirm_password" name="pass-repeat" placeholder=" Repeat Password" required autofocus><br><br>
-
+						<input class="form-control" type="password" id="confirm_password" name="pass-repeat" placeholder=" Repeat Password" required autofocus><br>
 						<!--age-->
 						<!-- <label for="Age">Age:</label> -->
-						<input class="form-control" type="text" id="Age" name="age" placeholder=" Age" required autofocus><br><br>
+						<input class="form-control" type="text" id="Age" name="age" placeholder=" Age" required autofocus><br>
 						<!--Gender: -->
 						<!-- <div class="Gender">
 								<label for="Gender" name='gender'><b>Gender: </b> </label>
@@ -52,8 +51,8 @@
 								<option value="none" selected disabled hidden>
 									Select Gender
 								</option>
-								<option value="Male">Male</option>
-								<option value="Female">Female</option>
+								<option value="Male">male</option>
+								<option value="Female">female</option>
 								<option value="Other">Other</option>
 
 							</select>
@@ -76,27 +75,11 @@
 							</select>
 						</div>
 						<br>
-						<!--Agreed-->
-						<!-- <div class="">
-							<label for="agreed">I agree to the terms and conditions:</label>
-							<input id="agreed" name="agreed" type="checkbox">
-						</div> -->
-
-						<br>
-
 						<input type="submit" class="btn btn-primary btn-lg" value="SignUp">
-
-
-
-
-						<!--<a href="'{% url 'signIn' %}'">SignUp</a></input>-->
-						<!--<button type="button" onclick="location.href='{% url 'signIn' %} '"></button>-->
-
 
 
 					</form>
 					<br>
-					<button type="button" class="btn btn-success btn-sm" onclick="location.href='{% url 'signIn' %} '">Login</button>
         </div>
       </div>
     </div>

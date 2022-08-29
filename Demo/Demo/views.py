@@ -59,8 +59,15 @@ def getUserData(UID):
     age = database.child(UID).child('userinfo').child(infokey).child('age').get().val()
     gender = database.child(UID).child('userinfo').child(infokey).child('Gender').get().val()
     bloodgroup = database.child(UID).child('userinfo').child(infokey).child('Bloodgroup').get().val()
-
-    userData = {'name': name, 'age': age, 'gender': gender, bloodgroup: 'bloodgroup'}
+    try:
+        last_condition = database.child(UID).child('userinfo').child(infokey).child('last_condition').get().val()
+    except:
+        print("No prediction yet")
+    if gender == 'male':
+        image = 'https://firebasestorage.googleapis.com/v0/b/ecg-nodemcu.appspot.com/o/malepatient.png?alt=media&token=9eec4c25-76b1-40db-993c-fac68acb6d37'
+    else:
+        image = 'https://firebasestorage.googleapis.com/v0/b/ecg-nodemcu.appspot.com/o/femalepatient.png?alt=media&token=93c4d19a-2d72-4dee-b2d4-3e2a08346553'
+    userData = {'name': name, 'age': age, 'gender': gender, 'bloodgroup': bloodgroup, 'image':image, 'last_condition':last_condition}
     return userData
 
 def home(request):
@@ -76,13 +83,7 @@ def home(request):
     for info in userinfo:
          infokey = info.key()
 
-    name = database.child(a).child('userinfo').child(infokey).child('name').get().val()
-    age = database.child(a).child('userinfo').child(infokey).child('age').get().val()
-    gender = database.child(a).child('userinfo').child(infokey).child('Gender').get().val()
-    bloodgroup = database.child(a).child('userinfo').child(infokey).child('Bloodgroup').get().val()
-
     ecgdates = []
-    dict={}
     #Print dates of ECG tests
     allecgdatas = database.child(a).child('ecgdatas').get()
 
@@ -90,8 +91,8 @@ def home(request):
     for data in allecgdatas:
         ecgdates.append(data.key())
 
-    print(ecgdates)
-    dict= {'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
+    dict = getUserData(a)
+
     return render(request, "Home.html",{'title':'Home','dict':dict, 'ecgdates':ecgdates})
 
 def getDoctorsData(UID):
@@ -107,38 +108,35 @@ def getDoctorsData(UID):
     age = database.child('doctors').child(a).child('userinfo').child(infokey).child('age').get().val()
     gender = database.child('doctors').child(a).child('userinfo').child(infokey).child('Gender').get().val()
     bloodgroup = database.child('doctors').child(a).child('userinfo').child(infokey).child('Bloodgroup').get().val()
+    if gender == 'male':
+        image = 'https://firebasestorage.googleapis.com/v0/b/ecg-nodemcu.appspot.com/o/maledoctor.png?alt=media&token=2bf6a99f-0da1-47ac-a6da-b27fc57845e0'
+    else:
+        image = 'https://firebasestorage.googleapis.com/v0/b/ecg-nodemcu.appspot.com/o/femaledoctor.png?alt=media&token=b30eae9b-447e-41bc-83f2-cc2fe0d01999'
+    doctorsdata = {'name': name, 'age': age, 'gender': gender, 'bloodgroup': bloodgroup, 'image': image}
 
-    doctorsdata = {'name': name, 'age': age, 'gender': gender, bloodgroup: 'bloodgroup'}
     return doctorsdata
 
 def DoctorsHome(request):
 
     idtoken= request.session['uid']
-    print("IDTOKEN:",idtoken)
+    # print("IDTOKEN:",idtoken)
     a = authe.get_account_info(idtoken)
     a = a['users']
     a = a[0]
     a = a['localId']
-    print(a)
-    # ecgreports = []
-    # dict={}
-    # #Print dates of ECG tests
-    # allecgdatas = database.child(a).child('ecgdatas').get()
+    # print(a)
 
-
-    # for data in allecgdatas:
-    #     ecgreports.append(data.key())
-
-    # print(ecgreports)
     reports = database.child('Dataset').get().val()
 
     report_dict = {}
+    
     for data in reports:
-        verification = database.child('Dataset').child(str(data)).child('classified').get().val()
+        verification = database.child('Dataset').child(str(data)).child('verified').get().val()
         report_dict[data] = verification
+        # print(verification)
 
-    dict= getDoctorsData(a) #{'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
-    return render(request, "doctors_home.html",{'title':'Home','dict':dict,'reports':report_dict}) #,'ecgdates':ecgreports})
+    dict= getDoctorsData(a) 
+    return render(request, "doctors_home.html",{'title':'Home','dict':dict,'reports':report_dict})
 
 def postsignIn(request):
     email = request.POST.get('email')
@@ -156,20 +154,6 @@ def postsignIn(request):
     session_id = user['idToken']
 
     request.session['uid'] = str(session_id)
-
-
-    # userinfo = database.child(uid).child("userinfo").get()
-
-    # for info in userinfo:
-    #     infokey = info.key()
-
-    # name = database.child(uid).child('userinfo').child(infokey).child('name').get().val()
-    # age = database.child(uid).child('userinfo').child(infokey).child('age').get().val()
-    # gender = database.child(uid).child('userinfo').child(infokey).child('Gender').get().val()
-    # bloodgroup = database.child(uid).child('userinfo').child(infokey).child('Bloodgroup').get().val()
-
-
-    # dict={'name':name, 'age':age, 'gender':gender, 'bloodgroup':bloodgroup}
 
     dict = getUserData(uid)
 
@@ -212,11 +196,15 @@ def DoctorsPostSignIn(request):
     reports = database.child('Dataset').get().val()
 
     report_dict = {}
+    verified_reports = {}
     for data in reports:
-        verification = database.child('Dataset').child(str(data)).child('classified').get().val()
-        report_dict[data] = verification
-
-    return render(request, "doctors_home.html", {'title':'Login', "email": email, 'dict':dict, 'reports':report_dict})
+        verification = database.child('Dataset').child(str(data)).child('verified').get().val()
+        if verification == 'True':
+            report_dict[data] = verification
+        else:
+            verified_reports[data] = verification
+        reports_length = {'len':len(report_dict)}
+    return render(request, "doctors_home.html", {'title':'Login', "email": email, 'dict':dict, 'reports':report_dict, 'verified_reports':verified_reports, 'reports_length':reports_length})
 
 def logout(request):
     try:
@@ -254,7 +242,7 @@ def postsignUp(request):
 
          except:
              print(uid)
-     data = {'name': name,'age': age, 'Gender': gender, 'Bloodgroup': bloodgroup}
+     data = {'name': name,'age': age, 'Gender': gender, 'bloodgroup': bloodgroup}
      database.child(uid).child("userinfo").push(data)
      return render(request, "Login.html")
 
@@ -276,23 +264,18 @@ def postReset(request):
         return render(request, "Reset.html", {"msg": message})
 def getReport(id):
     report = database.child('Dataset').get().val()
-    print(report)
-    print(type(report))
     return report
 
 report=''
 def doctors_graph(request):
     global report
     report = str(request.GET.get('report'))
-    print("This is id: ", report)
+    # print("This is id: ", report)
     # ecg = database.child('Dataset').get().val()
 
     ecg = database.child('Dataset').child(report).child('ecg').get().val()
 
     heart_condition = database.child('Dataset').child(report).child('heart_condition').get().val()
-    # print(heart_condition)
-    
-    # ecg = database.child('Dataset').child(report).get().val()  #.child('ecg').get().val()
 
     indices = [*range(0, 187, 1)]
 
@@ -318,9 +301,7 @@ def doctors_graph(request):
             'heart_condition':heart_condition,
             'heart_conditions':heart_conditions
         }
-    # print("ecg: ", getReport(report))
-    # print("indices: ", indices)
-    # getReport(report)
+
     return render(request, "doctor_graph.html", values)
 
 def verify_prediction(request):
@@ -340,7 +321,7 @@ def verify_prediction(request):
     # val = []
     # val = val.append(heart_condition)
     database.child('Dataset').child(report).child('heart_condition').set([heart_condition])
-    database.child('Dataset').child(report).child('classified').set('True')
+    database.child('Dataset').child(report).child('verified').set('True')
 
     return redirect('DoctorsHome')
 
@@ -349,8 +330,8 @@ date=''
 def line_graph(request):
     global date
     date=request.GET.get('date')
-    print("This is date")
-    print(date)
+    # print("This is date")
+    # print(date)
     # date="25 April 2021"
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
@@ -361,7 +342,7 @@ def line_graph(request):
     # print(a)
 
     ecgdatas = database.child(a).child("ecgdatas").child(date).get()
-    print(ecgdatas)
+    # print(ecgdatas)
 
     for data in ecgdatas:
         ecg = database.child(a).child("ecgdatas").child(str(date)).child(data.key()).child("Abdomen").get().val()
@@ -445,27 +426,17 @@ def getBeatIndices(beats_list_len):
     return Rand(start, end, num)
 
 # classify and return prediction of a heart beat
-# def getPrediction(beat_t):
-#     model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
-#     predictions = model.predict(beat_t)
-#     rounded_predictions = np.argmax(predictions, axis= 1)
-#     return rounded_predictions
-
-# in real this function holds the classifier model and code
 def getPrediction(beat_t):
-    pred = []
-    pred.append(random.randint(0,5))
-    return pred
+    model = load_model('E:/CSE (299)-Junior Design/ECG/django-firebaseauth/Demo/SimpleArrythmiaClassffier.h5')
+    predictions = model.predict(beat_t)
+    rounded_predictions = np.argmax(predictions, axis= 1)
+    return rounded_predictions
 
 global reports 
 reports = []
 
 def prediction_graph(request):
     global date
-     
-
-    print("This is date")
-    print(date)
 
     idtoken= request.session['uid']
     a = authe.get_account_info(idtoken)
@@ -475,7 +446,6 @@ def prediction_graph(request):
     a = a['localId']
 
     ecgdatas = database.child(a).child("ecgdatas").child(date).get()
-    print(ecgdatas)
 
     for data in ecgdatas:
         ecg = database.child(a).child("ecgdatas").child(str(date)).child(data.key()).child("Abdomen").get().val()
@@ -488,7 +458,7 @@ def prediction_graph(request):
     beat_indices = getBeatIndices(beats_len)
 
     # generate 5 reports randomly and store them in reports list. 
-    # if user wishes to validate we will push the whole list to dataset database otherwise we will use it only to show 
+    # if user wishes to validate push the whole list to dataset database otherwise use it only to show 
     # classification results
 
     # gather the user's data
@@ -500,7 +470,7 @@ def prediction_graph(request):
         beat_t = beats[i]
         beat_t = beat_t.tolist()
         heart_condition = getPrediction(beat_t)
-        report_dict = {'age': age, 'sex': sex, 'ecg': beat_t , 'heart_condition': heart_condition, 'classified': False}
+        report_dict = {'age': age, 'sex': sex, 'ecg': beat_t , 'heart_condition': heart_condition, 'verified': 'False'}
         reports.append(report_dict)
         
 
@@ -535,7 +505,12 @@ def prediction_graph(request):
             'predicted_result':predicted_result,
         }
 
-     
+    userinfo = database.child(a).child("userinfo").get().val()
+
+    for info in userinfo:
+            infokey = info
+
+    database.child(a).child("userinfo").child(infokey).child('last_condition').set(predicted_result)  
 
     return render(request, "graph2.html", values)
 
