@@ -38,5 +38,6 @@ The arrhythmia classification model classifies arrhythmia from heartbeat. It is 
 **Contributors**
 
 [![](https://github.com/Anan-Ghosh.png?size=50)](https://github.com/Anan-Ghosh)
+[![](https://github.com/Spectre118.png?size=50)](https://github.com/Spectre118)
 [![](https://github.com/ifran-rahman.png?size=50)](https://github.com/ifran-rahman)
-[![](https://github.com/yearat.png?size=50)](https://github.com/yearat)
+[![](https://github.com/yearat.png?size=50)](https://github.com/yearat) 
