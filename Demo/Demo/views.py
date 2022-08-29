@@ -4,8 +4,8 @@ from django.http import HttpResponse, HttpRequest, request,QueryDict
 from matplotlib.pyplot import title
 import pyrebase
 from dataProcessor import beatcutting, getIndex
-from tensorflow.keras.models import Model
-from tensorflow.keras.models import load_model
+# from tensorflow.keras.models import Model
+# from tensorflow.keras.models import load_model
 import h5py
 import pandas as pd
 import numpy as np
