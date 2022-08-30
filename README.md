@@ -31,9 +31,29 @@ The arrhythmia classification model classifies arrhythmia from heartbeat. It is 
 
 **How to run?**<br />
 * git clone https://github.com/ifran-rahman/ECG_Monitoring_System.git  # clone
+* Change the firebase config in view.py # can be found on firebase console's web app settings
+<img alt="Alt text" src="/images/firebaseconfig.png">
+* pip install -r requirements.txt  # install
 * cd Demo
-* pip install -r requirements.txt  # instal
 * py manage.py runserver # start server
+* Create a doctor's account manually from firebase 
+* Create a account according to the image below and replace the UID
+<img alt="Alt text" src="/images/doctors-auth.png">
+* Create a patient's account from the website
+* Push data to the patient's node.
+
+Alternatively for testing purpose, edit the given sample database "db_json.json" and import in firebase-realtime database.
+* Create a sample doctor account in firebase.
+* Replace the doctor's UID in the db_json.json file.
+* Create a sample patient account in firebase.
+* Replace the patient's UID in the db_json.json file.
+* Import the file in firebase-realtime database
+
+To push data from hardware,
+* Use user credentials to get access
+* Push data in list format. There should be two lists. One consists of ECG values, another consists of seconds where each second presents an ECG value
+ecg = [0.7732789441406522, 0.6836692935784979, 0.5320130856048167, 0.3407086606118426]
+timeframe = [0, 0.001, 0.002,0.003, 0.004]
 
 **Contributors**
 

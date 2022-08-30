@@ -11,15 +11,16 @@ import pandas as pd
 import numpy as np
 import random
 
+# Firebaseconfig
 config = {
-    'apiKey': "AIzaSyDyBOw4iG5FGfbor2YqDOF9QkX5Mv9XEmA",
-    'authDomain': "ecg-nodemcu.firebaseapp.com",
-    'databaseURL': "https://ecg-nodemcu-default-rtdb.firebaseio.com",
-    'projectId': "ecg-nodemcu",
-    'storageBucket': "ecg-nodemcu.appspot.com",
-    'messagingSenderId': "45897358746",
-    'appId': "1:45897358746:web:7ea053cf5b6bd22993ee23",
-    'measurementId': "G-74D3MKZXL3"
+    'apiKey': " ",
+    'authDomain': " ",
+    'databaseURL': " ",
+    'projectId': " ",
+    'storageBucket': " ",
+    'messagingSenderId': " ",
+    'appId': " ",
+    'measurementId': " "
 };
 
 # Initialising database,auth and firebase for further use
