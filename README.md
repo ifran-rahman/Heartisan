@@ -33,12 +33,14 @@ The arrhythmia classification model classifies arrhythmia from heartbeat. It is 
 * git clone https://github.com/ifran-rahman/ECG_Monitoring_System.git  # clone
 * Change the firebase config in view.py # can be found on firebase console's web app settings
 <img alt="Alt text" src="/images/firebaseconfig.png">
+
 * pip install -r requirements.txt  # install
 * cd Demo
 * py manage.py runserver # start server
 * Create a doctor's account manually from firebase 
 * Create a account according to the image below and replace the UID
 <img alt="Alt text" src="/images/doctors-auth.png">
+
 * Create a patient's account from the website
 * Push data to the patient's node.
 
