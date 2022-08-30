@@ -53,8 +53,8 @@ Alternatively for testing purpose, edit the given sample database "db_json.json"
 
 To push data from hardware,
 * Use user credentials to get access
-* Push data in list format. There should be two lists. One consists of ECG values, another consists of seconds where each second presents an ECG value
-ecg = [0.7732789441406522, 0.6836692935784979, 0.5320130856048167, 0.3407086606118426]
+* Push data in list format. There should be two lists. One consists of ECG values, another consists of seconds where each second presents an ECG value <br/>
+ecg = [0.7732789441406522, 0.6836692935784979, 0.5320130856048167, 0.3407086606118426] <br/>
 timeframe = [0, 0.001, 0.002,0.003, 0.004]
 
 **Contributors**
