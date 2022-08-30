@@ -38,7 +38,7 @@ The arrhythmia classification model classifies arrhythmia from heartbeat. It is 
 * cd Demo
 * py manage.py runserver # start server
 * Create a doctor's account manually from firebase 
-* Create a account according to the image below and replace the UID
+* Create an account in the database according to the image below and replace the UID
 <img alt="Alt text" src="/images/doctors-auth.png">
 
 * Create a patient's account from the website
