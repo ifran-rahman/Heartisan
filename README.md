@@ -28,7 +28,7 @@ The arrhythmia classification model classifies arrhythmia from heartbeat. It is 
 ## **Incremental Learning**<br />
 The proposed incremental learning method to apply on the system is demonstrated below.
                                                 
-<img alt="Alt text" src="/images/incremental learning.png>
+<img alt="Alt text" src="/images/incremental learning.png">
 
 ## **Application**
 <img title="Patient's portal" alt="Alt text" src="/images/patients-portal-dashboard.png">
