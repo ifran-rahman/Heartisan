@@ -18,13 +18,17 @@ The system is built using Django and Firebase is used as the database.
 
 ## **Database**<br />
 Firebase Realtime Database is used to store data. Firebase In the ”Realtime Database”, we can store data in JSON format. The structure of our database is illustrated in figure 4. 
-<img alt="Alt text" src="/images/Database.jpg">
+<img alt="Alt text" src="/images/Database.png">
 
 ## **Data Process**<br />
 The arrhythmia classification model classifies arrhythmia from heartbeat. It is necessary to extract beats from ECG signals. For inferences, beats get extracted from ECG signals. 
                                                 
-<img alt="Alt text" src="/images/dp_fullsignal.png">
-<img alt="Alt text" src="/images/dp_heartbeatsignal.png">
+<img alt="Alt text" src="/images/ecg_signal_processing.png">
+
+## **Incremental Learning**<br />
+The proposed incremental learning method to apply on the system is demonstrated below.
+                                                
+<img alt="Alt text" src="/images/incremental_learning.png">
 
 ## **Application**
 <img title="Patient's portal" alt="Alt text" src="/images/patients-portal-dashboard.png">
