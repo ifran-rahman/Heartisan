@@ -14,7 +14,7 @@ The key features of our work are listed as follows,
 ## **System**<br />
 The system is built using Django and Firebase is used as the database.
 
-<img alt="Alt text" src="/images/system_diagram.png">
+<img alt="Alt text" src="/images/system diagram.png">
 
 ## **Database**<br />
 Firebase Realtime Database is used to store data. Firebase In the ”Realtime Database”, we can store data in JSON format. The structure of our database is illustrated in figure 4. 
@@ -28,7 +28,7 @@ The arrhythmia classification model classifies arrhythmia from heartbeat. It is 
 ## **Incremental Learning**<br />
 The proposed incremental learning method to apply on the system is demonstrated below.
                                                 
-<img alt="Alt text" src="/images/incremental_learning.png">
+<img alt="Alt text" src="/images/incremental learning.png>
 
 ## **Application**
 <img title="Patient's portal" alt="Alt text" src="/images/patients-portal-dashboard.png">
